@@ -1,0 +1,303 @@
+@import 'tailwindcss';
+
+@theme {
+	--color-bg: #07070a;
+	--color-bg-elevated: #0f0f14;
+	--color-bg-card: #14141b;
+	--color-line: #1f1f27;
+
+	--color-surface-50: #f5f2ea;
+	--color-surface-200: #d6d1c4;
+	--color-surface-400: #8a8676;
+	--color-surface-500: #807c72;
+	--color-surface-700: #2a2820;
+	--color-surface-800: #1a1a22;
+
+	--color-brand: #f0b429;
+	--color-brand-hover: #ffc94d;
+	--color-brand-ink: #1a1408;
+
+	--color-muted: #8a8676;
+	--color-success: #7fb069;
+	--color-warning: #e8a33d;
+
+	--color-rating: #f0b429;
+	--color-danger: #c24a3a;
+
+	--shadow-card: none;
+	--shadow-elevated: 0 24px 60px rgba(0, 0, 0, 0.6);
+
+	--layout-max: 1600px;
+
+	--font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 20px;
+	--space-6: 24px;
+	--space-7: 32px;
+	--space-8: 48px;
+	--space-page-x: 4vw;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: local('Satoshi');
+}
+
+@font-face {
+	font-family: 'Cormorant Garamond';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: local('Cormorant Garamond');
+}
+
+html,
+body,
+#__nuxt {
+	background-color: var(--color-bg);
+	color: var(--color-surface-50);
+	min-height: 100%;
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	overscroll-behavior-y: contain;
+	caret-color: var(--color-brand);
+
+	background-image: linear-gradient(180deg, rgba(240, 180, 41, 0.012) 0%, transparent 40%), repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 2px);
+	background-attachment: fixed;
+}
+
+::selection {
+	background-color: var(--color-brand);
+	color: var(--color-brand-ink);
+}
+
+::-moz-selection {
+	background-color: var(--color-brand);
+	color: var(--color-brand-ink);
+}
+
+.t-display-1 {
+	font-family: var(--font-display);
+	font-size: clamp(2.5rem, 6vw, 4.5rem);
+	font-weight: 500;
+	line-height: 1.05;
+	letter-spacing: -0.01em;
+	color: var(--color-surface-50);
+}
+
+.t-display-2 {
+	font-family: var(--font-display);
+	font-size: clamp(1.8rem, 4vw, 2.8rem);
+	font-weight: 500;
+	line-height: 1.1;
+	letter-spacing: -0.005em;
+	color: var(--color-surface-50);
+}
+
+.t-display-3 {
+	font-family: var(--font-display);
+	font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+	font-weight: 500;
+	line-height: 1.05;
+	letter-spacing: -0.01em;
+	color: var(--color-surface-50);
+	text-wrap: balance;
+}
+
+.t-h1 {
+	font-family: var(--font-display);
+	font-size: clamp(1.6rem, 3vw, 2.1rem);
+	font-weight: 500;
+	line-height: 1.15;
+	letter-spacing: 0;
+	color: var(--color-surface-50);
+}
+
+.t-h2 {
+	font-family: var(--font-sans);
+	font-size: 0.78rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.16em;
+	color: var(--color-surface-50);
+}
+
+.t-body {
+	font-family: var(--font-sans);
+	font-size: 0.95rem;
+	line-height: 1.55;
+	color: var(--color-surface-200);
+}
+
+.t-meta {
+	font-family: var(--font-sans);
+	font-size: 0.8rem;
+	color: var(--color-surface-400);
+	letter-spacing: 0.02em;
+}
+
+.t-tabular {
+	font-family: var(--font-mono);
+	font-feature-settings:
+		'tnum' 1,
+		'ss01' 1;
+	font-size: 0.8rem;
+	letter-spacing: 0.04em;
+	color: var(--color-surface-400);
+}
+
+.t-eyebrow {
+	font-family: var(--font-mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-surface-500);
+}
+
+.t-overview {
+	color: var(--color-surface-200);
+	font-size: 1rem;
+	line-height: 1.65;
+	max-width: 64ch;
+}
+
+.t-back {
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-surface-400);
+	text-decoration: none;
+	transition: color 160ms ease;
+}
+
+.t-back:hover {
+	color: var(--color-brand);
+}
+
+.page-shell {
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	padding: 32px 4vw 64px;
+}
+
+.watch-shell {
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	padding: 24px 4vw 80px;
+}
+
+.eyebrow-row {
+	display: flex;
+	align-items: baseline;
+	gap: 6px 16px;
+	flex-wrap: wrap;
+}
+
+.rule {
+	height: 1px;
+	background-color: var(--color-line);
+	border: 0;
+	margin: 0;
+}
+
+.rule-amber {
+	height: 1px;
+	background-color: var(--color-brand);
+	border: 0;
+	margin: 0;
+	opacity: 0.6;
+}
+
+.panel {
+	background-color: var(--color-bg-elevated);
+	border: 1px solid var(--color-line);
+	border-radius: 0;
+}
+
+.layout-container {
+	max-width: var(--layout-max);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 4vw;
+	padding-right: 4vw;
+}
+
+.scroll-row {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	-webkit-overflow-scrolling: touch;
+	scroll-behavior: smooth;
+}
+
+.scroll-row::-webkit-scrollbar {
+	display: none;
+}
+
+.skeleton {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--color-surface-800);
+	border-radius: 0;
+}
+
+.skeleton::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	transform: translateX(-100%);
+	background: linear-gradient(90deg, transparent 0%, rgba(240, 180, 41, 0.04) 50%, transparent 100%);
+	animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-brand);
+	outline-offset: 2px;
+	border-radius: 0;
+}
+
+.hero-gradient {
+	background: linear-gradient(to top, var(--color-bg) 4%, rgba(7, 7, 10, 0.85) 22%, rgba(7, 7, 10, 0.4) 55%, rgba(7, 7, 10, 0.1) 85%, transparent 100%);
+}
+
+.hero-gradient-side {
+	background: linear-gradient(to right, var(--color-bg) 0%, rgba(7, 7, 10, 0.85) 30%, rgba(7, 7, 10, 0.4) 55%, transparent 80%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	.skeleton::after {
+		display: none;
+	}
+
+	body {
+		background-image: none;
+	}
+}

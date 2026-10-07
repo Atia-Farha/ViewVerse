@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+
+# Nuxt generated files
+.nuxt/
+.output/
+.nitro/
+.nitro/
+
+# Build / deployment
+dist/
+.vercel/
+.netlify/
+.wrangler/
+
+# Package manager
+.pnpm-store/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.vite/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Static / binary assets
+public/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+*.mp4
+*.webm
+*.mp3
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Lockfiles
+pnpm-lock.yaml
