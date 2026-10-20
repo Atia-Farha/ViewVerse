@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'tv-airing-today' });
-useHead({ title: 'ViewVerse. Airing Today' });
+useHead({
+	title: 'ViewVerse. Airing Today',
+	meta: shareHeadMeta({
+		title: 'TV Shows Airing Today | ViewVerse',
+		description: 'TV shows airing new episodes today — keep up with what is on tonight, curated on ViewVerse.',
+		path: '/tv/airing-today',
+	}),
+});
 
 const tmdb = useTmdb();
 

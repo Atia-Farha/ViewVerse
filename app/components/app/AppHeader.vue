@@ -103,8 +103,8 @@ onBeforeUnmount(() => {
 	background-color: var(--color-bg);
 	border-bottom: 1px solid var(--color-line);
 	transition:
-		background-color 200ms ease,
-		border-color 200ms ease;
+		background-color 500ms ease,
+		border-color 500ms ease;
 }
 
 .app-header.is-scrolled {
@@ -118,6 +118,8 @@ onBeforeUnmount(() => {
 	display: flex;
 	align-items: center;
 	gap: 16px;
+	max-width: var(--layout-max);
+	margin-inline: auto;
 	padding: 0 4vw;
 	min-height: 56px;
 }
@@ -172,7 +174,7 @@ onBeforeUnmount(() => {
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .app-header__link:hover {
@@ -196,7 +198,7 @@ onBeforeUnmount(() => {
 	background-color: var(--color-brand);
 	transform: scaleX(0);
 	transform-origin: left center;
-	transition: transform 200ms ease;
+	transition: transform 500ms ease;
 }
 
 .app-header__actions {
@@ -220,8 +222,8 @@ onBeforeUnmount(() => {
 	text-decoration: none;
 	cursor: pointer;
 	transition:
-		color 160ms ease,
-		background-color 160ms ease;
+		color 500ms ease,
+		background-color 500ms ease;
 }
 
 .app-header__icon-btn:hover {

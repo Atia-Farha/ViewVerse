@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { profileImage } from '~/utils/tmdb.js';
+import { profileImage, posterThumb, tmdbShareImage } from '~/utils/tmdb.js';
 import { formatDate, getYear } from '~/utils/format.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'person' });
 
@@ -58,7 +59,7 @@ const crewCredits = computed(() => {
 		id: c.id,
 		media_type: c.media_type,
 		title: c.title || c.name || '',
-		poster: c.poster_path ? `https://image.tmdb.org/t/p/w185${c.poster_path}` : null,
+		poster: posterThumb(c.poster_path),
 		year: getYear(c.release_date || c.first_air_date),
 		job: c.job || c.department || '',
 	}));
@@ -70,8 +71,7 @@ function creditLink(credit) {
 }
 
 function actingPoster(credit) {
-	if (!credit?.poster_path) return null;
-	return `https://image.tmdb.org/t/p/w185${credit.poster_path}`;
+	return posterThumb(credit?.poster_path);
 }
 
 const availableTabs = computed(() => {
@@ -186,7 +186,20 @@ async function load() {
 watch(
 	person,
 	(value) => {
-		if (value?.name) useHead({ title: `${value.name}. ViewVerse` });
+		if (!value?.name) return;
+		const knownFor = value.known_for_department ? ` — ${value.known_for_department}` : '';
+		const description = value.biography || `Filmography and profile for ${value.name}${knownFor} on ViewVerse.`;
+		const image = tmdbShareImage(value.profile_path, 'h632');
+		useHead({
+			title: `${value.name}. ViewVerse`,
+			meta: shareHeadMeta({
+				title: `${value.name}${knownFor} | ViewVerse`,
+				description,
+				path: `/person/${value.id}`,
+				image,
+				type: 'profile',
+			}),
+		});
 	},
 	{ immediate: true },
 );
@@ -337,11 +350,16 @@ function goBack() {
 
 .person-page--loading {
 	padding: 24px 4vw;
+	max-width: var(--layout-max);
+	margin: 0 auto;
 }
 
 .person-page__back-wrap {
 	display: inline-flex;
-	margin: 24px 4vw 0;
+	margin: 24px auto 0;
+	padding: 0 4vw;
+	max-width: var(--layout-max);
+	width: 100%;
 	align-self: flex-start;
 }
 
@@ -462,7 +480,10 @@ function goBack() {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0;
-	margin: 40px 4vw 0;
+	margin: 40px auto 0;
+	max-width: var(--layout-max);
+	padding: 0 4vw;
+	width: 100%;
 	border-bottom: 1px solid var(--color-line);
 }
 
@@ -480,8 +501,8 @@ function goBack() {
 	letter-spacing: 0.04em;
 	cursor: pointer;
 	transition:
-		color 160ms ease,
-		background-color 160ms ease;
+		color 500ms ease,
+		background-color 500ms ease;
 }
 
 .person-page__tab:hover {
@@ -511,6 +532,9 @@ function goBack() {
 
 .person-page__section {
 	padding: 28px 4vw 0;
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	width: 100%;
 }
 
 .person-page__crew-list {
@@ -548,7 +572,7 @@ function goBack() {
 	align-items: center;
 	text-decoration: none;
 	color: inherit;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .person-page__crew-item:hover .person-page__crew-title {

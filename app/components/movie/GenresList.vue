@@ -1,6 +1,11 @@
 <script setup>
 import { h, ref } from 'vue';
 
+defineProps({
+	/** Hide the "Browse by Genre" heading + rule (used when embedded, e.g. under a search bar). */
+	hideHeader: { type: Boolean, default: false },
+});
+
 const tmdb = useTmdb();
 const genres = ref([]);
 const loading = ref(true);
@@ -151,7 +156,7 @@ await load();
 
 <template>
 	<section class="genres-list" aria-label="Genres">
-		<header class="genres-list__header">
+		<header v-if="!hideHeader" class="genres-list__header">
 			<h2 class="t-h2 genres-list__title">Browse by Genre</h2>
 			<span class="genres-list__count">{{ genres.length }}</span>
 		</header>
@@ -249,9 +254,9 @@ await load();
 	color: var(--color-surface-200);
 	text-decoration: none;
 	transition:
-		border-color 220ms ease,
-		background-color 220ms ease,
-		color 220ms ease;
+		border-color 500ms ease,
+		background-color 500ms ease,
+		color 500ms ease;
 }
 
 .genres-list__corner {
@@ -268,8 +273,8 @@ await load();
 	transform: translateY(-50%) scale(1);
 	transform-origin: center;
 	transition:
-		color 260ms ease,
-		transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+		color 500ms ease,
+		transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .genres-list__glyph {

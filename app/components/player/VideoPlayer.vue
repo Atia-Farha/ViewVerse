@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { VIDFAST_ORIGINS } from '~/utils/vidfast.js';
 
 const props = defineProps({
@@ -10,6 +10,26 @@ const props = defineProps({
 const visible = ref(false);
 const hasError = ref(false);
 const iframeRef = ref(null);
+
+// Defense in depth: only load the iframe when `src` is an absolute https
+// URL whose origin is on the VidFast allowlist. This guarantees the embedded
+// frame can never be pointed at an arbitrary origin even if the URL builder
+// or a caller changes later.
+const safeSrc = computed(() => {
+	const raw = props.src;
+	if (typeof raw !== 'string' || !raw) return '';
+	let url;
+	try {
+		url = new URL(raw);
+	} catch {
+		return '';
+	}
+	if (url.protocol !== 'https:') return '';
+	if (!VIDFAST_ORIGINS.includes(url.origin)) return '';
+	return url.toString();
+});
+
+const isBlockedSrc = computed(() => props.src !== safeSrc.value);
 
 function onLoad() {
 	visible.value = true;
@@ -63,7 +83,13 @@ watch(
 
 <template>
 	<div class="video-player">
-		<div v-if="!visible" class="video-player__placeholder">
+		<div v-if="isBlockedSrc" class="video-player__placeholder">
+			<div class="video-player__placeholder-inner">
+				<p class="video-player__placeholder-eyebrow">Player unavailable</p>
+				<p class="video-player__placeholder-note">This player source isn't allowed.</p>
+			</div>
+		</div>
+		<div v-else-if="!visible" class="video-player__placeholder">
 			<div class="video-player__placeholder-inner">
 				<p class="video-player__placeholder-eyebrow">Player ready</p>
 				<button type="button" class="video-player__load-btn" @click="onLoad">
@@ -76,7 +102,7 @@ watch(
 			</div>
 		</div>
 		<div v-else class="video-player__frame">
-			<iframe v-if="visible" ref="iframeRef" :src="src" title="VidFast player" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen @load="onIframeLoad" />
+			<iframe v-if="visible" ref="iframeRef" :src="safeSrc" title="VidFast player" frameborder="0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen @load="onIframeLoad" />
 			<div v-if="hasError" class="video-player__error" role="alert">
 				<p>Unable to load the player. Try again.</p>
 				<Button variant="primary" size="md" @click="retry">Retry</Button>
@@ -136,7 +162,7 @@ watch(
 	border: 0;
 	border-radius: 0;
 	cursor: pointer;
-	transition: background-color 160ms ease;
+	transition: background-color 500ms ease;
 }
 
 .video-player__load-btn:hover {

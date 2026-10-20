@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { formatDate, formatRuntime, formatVoteCount, getYear } from '~/utils/format.js';
 import { buildVidfastMovieUrl } from '~/utils/vidfast.js';
+import { shareHeadMeta } from '~/utils/share.js';
+import { tmdbShareImage } from '~/utils/tmdb.js';
 
 definePageMeta({
 	name: 'watch-movie',
@@ -64,7 +66,20 @@ async function load() {
 watch(
 	movie,
 	(value) => {
-		if (value?.title) useHead({ title: `${value.title}. Watch. ViewVerse` });
+		if (!value?.title) return;
+		const year = value.year ? ` (${value.year})` : '';
+		const description = value.overview || `Watch ${value.title} on ViewVerse.`;
+		const image = tmdbShareImage(value.backdropPath || value.posterPath);
+		useHead({
+			title: `${value.title}. Watch. ViewVerse`,
+			meta: shareHeadMeta({
+				title: `Watching ${value.title}${year} | ViewVerse`,
+				description,
+				path: `/watch/movie/${value.id}`,
+				image,
+				type: 'video.movie',
+			}),
+		});
 	},
 	{ immediate: true },
 );

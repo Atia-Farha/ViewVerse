@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies-now-playing' });
-useHead({ title: 'ViewVerse. Now Playing' });
+useHead({
+	title: 'ViewVerse. Now Playing',
+	meta: shareHeadMeta({
+		title: 'Now Playing in Theaters | ViewVerse',
+		description: 'Movies currently playing in theaters — see what is out now and find what to catch this week on ViewVerse.',
+		path: '/movies/now-playing',
+	}),
+});
 
 const tmdb = useTmdb();
 

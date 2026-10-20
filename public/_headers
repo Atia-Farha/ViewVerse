@@ -1,0 +1,50 @@
+# Cloudflare Pages response headers.
+#
+# This file is read natively by Cloudflare Pages at request time — it replaces
+# the `routeRules` `headers:` block that previously lived in nuxt.config.ts.
+# That block was inert on a static deploy (there is no Nitro server to apply
+# it), so it has been moved here verbatim (same paths, same values).
+#
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+# --- Caching -------------------------------------------------------------
+# Hashed build assets are immutable.
+/_nuxt/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Prerendered HTML shells/pages revalidate quickly; the SPA fallback
+# (see _redirects) is deliberately *not* long-cached so newly built pages
+# appear promptly.
+/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/movies
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/movies/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/tv
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/tv/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/genre/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+
+/movie/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
+
+/person/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
+
+# --- Security headers (applies to every response) ------------------------
+# Note: Pages always sets `X-Content-Type-Options: nosniff` for you; it is
+# repeated here for parity with the previous config and to be explicit.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://image.tmdb.org; font-src 'self' data: https://fonts.gstatic.com; frame-src https://vidfast.pro https://vidfast.in https://vidfast.io https://vidfast.me https://vidfast.net https://vidfast.pm https://vidfast.xyz https://vidfast.vc https://vidfast.bz https://www.youtube-nocookie.com; connect-src 'self' https://api.themoviedb.org https://image.tmdb.org; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'

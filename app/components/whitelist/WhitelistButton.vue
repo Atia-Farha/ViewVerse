@@ -41,7 +41,7 @@ function onToggle() {
 	width: 18px;
 	height: 18px;
 	flex-shrink: 0;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .whitelist-btn__icon.is-filled {

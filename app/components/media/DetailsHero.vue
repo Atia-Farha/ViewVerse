@@ -6,15 +6,16 @@ const props = defineProps({
 	backdropPath: { type: String, default: null },
 });
 
-const style = computed(() => {
+const backdrop = computed(() => {
 	const url = backdropLarge(props.backdropPath);
-	if (!url) return {};
-	return { backgroundImage: `url(${url})` };
+	if (!url) return null;
+	return { url };
 });
 </script>
 
 <template>
-	<section class="details-hero" :style="style">
+	<section class="details-hero">
+		<img v-if="backdrop" class="details-hero__img" :src="backdrop.url" alt="" width="1280" height="720" fetchpriority="high" decoding="async" />
 		<div class="hero-gradient details-hero__gradient" />
 	</section>
 </template>
@@ -25,9 +26,16 @@ const style = computed(() => {
 	height: 56vh;
 	max-height: 640px;
 	background-color: var(--color-bg-elevated);
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
+	overflow: hidden;
+}
+
+.details-hero__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
 }
 
 .details-hero__gradient {

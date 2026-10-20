@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue';
 import { formatRuntime, getYear, truncate } from '~/utils/format.js';
 import { normalizeList, normalizeMedia } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
+import { tmdbShareImage } from '~/utils/tmdb.js';
 
 definePageMeta({
 	name: 'home',
@@ -9,6 +11,11 @@ definePageMeta({
 
 useHead({
 	title: 'ViewVerse. Home',
+	meta: shareHeadMeta({
+		title: 'ViewVerse — Movies and TV, simplified',
+		description: 'A performance-focused, Netflix-inspired movie and TV streaming experience. Browse trending, popular, top rated, now playing, and airing today.',
+		path: '/',
+	}),
 });
 
 const tmdb = useTmdb();

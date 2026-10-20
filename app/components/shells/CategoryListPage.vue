@@ -32,7 +32,6 @@ function isActive(to) {
 .category-list-page__header {
 	margin-bottom: 32px;
 	padding-bottom: 18px;
-	border-bottom: 1px solid var(--color-line);
 }
 
 .category-list-page__title {
@@ -63,7 +62,7 @@ function isActive(to) {
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .category-list-page__tab:hover {
@@ -83,7 +82,7 @@ function isActive(to) {
 	background-color: var(--color-brand);
 	transform: scaleX(0);
 	transform-origin: left center;
-	transition: transform 200ms ease;
+	transition: transform 500ms ease;
 }
 
 .category-list-page__tab.is-active .category-list-page__tab-rule {

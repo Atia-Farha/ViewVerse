@@ -1,5 +1,7 @@
 const VIDFAST_BASE = 'https://vidfast.vc';
 
+export const VIDFAST_ORIGINS = ['https://vidfast.pro', 'https://vidfast.in', 'https://vidfast.io', 'https://vidfast.me', 'https://vidfast.net', 'https://vidfast.pm', 'https://vidfast.xyz', 'https://vidfast.vc', 'https://vidfast.bz'];
+
 export function buildVidfastMovieUrl(tmdbId, options = {}) {
 	const params = new URLSearchParams();
 	if (options.autoPlay) params.set('autoPlay', 'true');
@@ -36,5 +38,3 @@ export function buildVidfastTvUrl(tmdbId, season, episode, options = {}) {
 	const qs = params.toString();
 	return qs ? `${VIDFAST_BASE}/tv/${tmdbId}/${season}/${episode}?${qs}` : `${VIDFAST_BASE}/tv/${tmdbId}/${season}/${episode}`;
 }
-
-export const VIDFAST_ORIGINS = ['https://vidfast.pro', 'https://vidfast.in', 'https://vidfast.io', 'https://vidfast.me', 'https://vidfast.net', 'https://vidfast.pm', 'https://vidfast.xyz', 'https://vidfast.vc', 'https://vidfast.bz'];

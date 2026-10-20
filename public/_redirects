@@ -1,0 +1,14 @@
+# Cloudflare Pages SPA fallback.
+#
+# Pages serves an existing file first (real prerendered .html, _nuxt assets,
+# favicon, robots.txt). Only if nothing matches does it fall through to this
+# rule, which rewrites to the Nuxt-generated SPA entry so Vue Router can
+# resolve client-side routes like /movie/550, /tv/1399, /watch/tv/1/1/1.
+#
+# Cloudflare Pages supports SPA fallback via a 200 rewrite to the SPA shell.
+# See: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Priority note: this must be a 200 rewrite (not a 302) so the app boots and
+# Vue Router takes over, matching the ssr:false routeRules in nuxt.config.ts.
+
+/*    /index.html   200

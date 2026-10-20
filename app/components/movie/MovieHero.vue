@@ -8,10 +8,10 @@ const props = defineProps({
 
 const emit = defineEmits(['play']);
 
-const backdropStyle = computed(() => {
+const backdrop = computed(() => {
 	const url = backdropLarge(props.item?.backdropPath);
-	if (!url) return {};
-	return { backgroundImage: `url(${url})` };
+	if (!url) return null;
+	return { url };
 });
 
 function formatRatingDisplay(value) {
@@ -28,7 +28,8 @@ function onPlay() {
 
 <template>
 	<section v-if="item" class="hero">
-		<div class="hero__backdrop" :style="backdropStyle">
+		<div class="hero__backdrop">
+			<img v-if="backdrop" class="hero__backdrop-img" :src="backdrop.url" alt="" width="1280" height="720" fetchpriority="high" decoding="async" />
 			<div class="hero__gradient hero__gradient--bottom" />
 			<div class="hero__gradient hero__gradient--side" />
 		</div>
@@ -39,7 +40,6 @@ function onPlay() {
 			</h1>
 			<div class="hero__meta">
 				<span v-if="item.rating !== null && item.rating !== undefined" class="hero__rating">
-					<span class="hero__rating-prefix">·</span>
 					<span class="hero__rating-value">{{ formatRatingDisplay(item.rating) }}</span>
 				</span>
 				<span v-if="item.year" class="hero__year">{{ item.year }}</span>
@@ -81,10 +81,17 @@ function onPlay() {
 	position: absolute;
 	inset: 0;
 	background-color: var(--color-bg-elevated);
-	background-size: cover;
-	background-position: center top;
-	background-repeat: no-repeat;
 	z-index: -1;
+	overflow: hidden;
+}
+
+.hero__backdrop-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center top;
 }
 
 .hero__gradient {
@@ -146,10 +153,6 @@ function onPlay() {
 	align-items: baseline;
 	gap: 4px;
 	color: var(--color-brand);
-}
-
-.hero__rating-prefix {
-	opacity: 0.6;
 }
 
 .hero__rating-value {

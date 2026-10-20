@@ -52,7 +52,7 @@ const link = computed(() => {
 	background-color: var(--color-brand);
 	transform: scaleX(0);
 	transform-origin: left center;
-	transition: transform 220ms ease;
+	transition: transform 500ms ease;
 	pointer-events: none;
 }
 
@@ -79,7 +79,7 @@ const link = computed(() => {
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .credit-card:hover .credit-card__title {

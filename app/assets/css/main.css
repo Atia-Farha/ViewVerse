@@ -181,7 +181,7 @@ body {
 	text-transform: uppercase;
 	color: var(--color-surface-400);
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .t-back:hover {

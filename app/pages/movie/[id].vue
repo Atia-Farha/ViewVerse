@@ -3,6 +3,8 @@ import { computed, ref } from 'vue';
 import { posterLarge } from '~/utils/tmdb.js';
 import { formatDate, formatRuntime, getYear, formatVoteCount } from '~/utils/format.js';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
+import { tmdbShareImage } from '~/utils/tmdb.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -83,7 +85,20 @@ async function load() {
 watch(
 	movie,
 	(value) => {
-		if (value?.title) useHead({ title: `${value.title}. ViewVerse` });
+		if (!value?.title) return;
+		const year = value.year ? ` (${value.year})` : '';
+		const description = value.tagline || value.overview || '';
+		const image = tmdbShareImage(value.backdropPath || value.posterPath);
+		useHead({
+			title: `${value.title}${year}. ViewVerse`,
+			meta: shareHeadMeta({
+				title: `${value.title}${year} | ViewVerse`,
+				description,
+				path: `/movie/${value.id}`,
+				image,
+				type: 'video.movie',
+			}),
+		});
 	},
 	{ immediate: true },
 );
@@ -344,7 +359,8 @@ function play() {
 .movie-details__trailer-frame {
 	position: relative;
 	width: calc(100% - 8vw);
-	margin: 0 4vw;
+	max-width: var(--layout-max);
+	margin: 0 auto;
 	aspect-ratio: 16 / 9;
 	background-color: var(--color-bg-elevated);
 	border: 1px solid var(--color-line);

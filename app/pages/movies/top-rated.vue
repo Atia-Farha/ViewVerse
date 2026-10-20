@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies-top-rated' });
-useHead({ title: 'ViewVerse. Top Rated Movies' });
+useHead({
+	title: 'ViewVerse. Top Rated Movies',
+	meta: shareHeadMeta({
+		title: 'Top Rated Movies | ViewVerse',
+		description: 'The highest-rated movies of all time, ranked by community votes — discover what critics and audiences love on ViewVerse.',
+		path: '/movies/top-rated',
+	}),
+});
 
 const tmdb = useTmdb();
 

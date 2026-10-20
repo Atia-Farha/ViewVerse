@@ -2,9 +2,17 @@
 import { computed, nextTick, onMounted, ref } from 'vue';
 import { useDebouncedSearch } from '~/composables/useDebouncedSearch.js';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'search' });
-useHead({ title: 'ViewVerse. Search' });
+useHead({
+	title: 'ViewVerse. Search',
+	meta: shareHeadMeta({
+		title: 'Search Movies and TV Shows | ViewVerse',
+		description: 'Search across movies, TV shows, and people to find what you want to watch next on ViewVerse.',
+		path: '/search',
+	}),
+});
 
 const tmdb = useTmdb();
 const inputRef = ref(null);
@@ -107,9 +115,9 @@ onMounted(async () => {
 				<ContentGrid :items="filteredResults" :media-type="activeType === 'tv' ? 'tv' : 'movie'" />
 			</div>
 		</div>
-	</div>
 
-	<GenresList v-if="!hasQuery && !isLoading && !error" style="max-width: var(--layout-max); margin-inline: auto" />
+		<GenresList v-if="!hasQuery && !isLoading && !error" hide-header />
+	</div>
 </template>
 
 <style scoped>
@@ -117,6 +125,14 @@ onMounted(async () => {
 	padding: 40px 4vw 64px;
 	max-width: var(--layout-max);
 	margin: 0 auto;
+}
+
+/* When GenresList is nested inside .search-page, the parent already
+   provides the 4vw gutter, so suppress the child component's own padding
+   to avoid doubling. Drop the top padding so the cards sit right under the
+   search bar (the headline/rule are hidden via hide-header prop). */
+.search-page :deep(.genres-list) {
+	padding: 32px 0 48px;
 }
 
 .search-page__header {
@@ -148,7 +164,7 @@ onMounted(async () => {
 	width: 20px;
 	height: 20px;
 	color: var(--color-surface-400);
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 	pointer-events: none;
 }
 
@@ -163,7 +179,7 @@ onMounted(async () => {
 	font-size: clamp(1.2rem, 2.4vw, 1.5rem);
 	font-weight: 400;
 	letter-spacing: -0.005em;
-	transition: border-color 160ms ease;
+	transition: border-color 500ms ease;
 }
 
 .search-page__input::-webkit-search-cancel-button,
@@ -200,7 +216,7 @@ onMounted(async () => {
 	border: 0;
 	color: var(--color-surface-400);
 	cursor: pointer;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .search-page__clear:hover {
@@ -274,8 +290,8 @@ onMounted(async () => {
 	letter-spacing: 0.02em;
 	cursor: pointer;
 	transition:
-		color 160ms ease,
-		background-color 160ms ease;
+		color 500ms ease,
+		background-color 500ms ease;
 }
 
 .search-page__filter:last-child {

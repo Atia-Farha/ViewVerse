@@ -111,7 +111,7 @@ function personKey(person) {
 	font-family: var(--font-sans);
 	cursor: pointer;
 	text-align: left;
-	transition: border-color 200ms ease;
+	transition: border-color 500ms ease;
 }
 
 .credits__head:hover {
@@ -131,7 +131,7 @@ function personKey(person) {
 	height: 12px;
 	margin-left: auto;
 	color: var(--color-surface-400);
-	transition: transform 220ms ease;
+	transition: transform 500ms ease;
 }
 
 .credits__chevron--open {
@@ -227,7 +227,7 @@ function personKey(person) {
 .credits__link {
 	color: inherit;
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .credits__link:hover {
@@ -261,7 +261,7 @@ function personKey(person) {
 .credits__minor-link {
 	color: var(--color-surface-200);
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .credits__minor-link:hover {

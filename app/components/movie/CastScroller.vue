@@ -67,6 +67,9 @@ function profileUrl(person) {
 <style scoped>
 .cast {
 	padding: 24px 4vw 0;
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	width: 100%;
 }
 
 .cast__header {
@@ -100,7 +103,7 @@ function profileUrl(person) {
 	gap: 8px;
 	text-decoration: none;
 	color: inherit;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 a.cast__person:hover .cast__name {

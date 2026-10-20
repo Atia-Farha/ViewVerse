@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue';
 import { posterLarge } from '~/utils/tmdb.js';
 import { formatDate, formatVoteCount, getYear } from '~/utils/format.js';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
+import { tmdbShareImage } from '~/utils/tmdb.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -114,7 +116,20 @@ async function load() {
 watch(
 	show,
 	(value) => {
-		if (value?.title) useHead({ title: `${value.title}. ViewVerse` });
+		if (!value?.title) return;
+		const year = value.year ? ` (${value.year})` : '';
+		const description = value.tagline || value.overview || '';
+		const image = tmdbShareImage(value.backdropPath || value.posterPath);
+		useHead({
+			title: `${value.title}${year}. ViewVerse`,
+			meta: shareHeadMeta({
+				title: `${value.title}${year} | ViewVerse`,
+				description,
+				path: `/tv/${value.id}`,
+				image,
+				type: 'video.movie',
+			}),
+		});
 	},
 	{ immediate: true },
 );
@@ -374,6 +389,9 @@ const showFacts = computed(() => {
 
 .tv-details__seasons {
 	padding: 40px 0 0;
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	width: 100%;
 }
 
 .tv-details__seasons-header {
@@ -400,7 +418,8 @@ const showFacts = computed(() => {
 .tv-details__trailer-frame {
 	position: relative;
 	width: calc(100% - 8vw);
-	margin: 0 4vw;
+	max-width: var(--layout-max);
+	margin: 0 auto;
 	aspect-ratio: 16 / 9;
 	background-color: var(--color-bg-elevated);
 	border: 1px solid var(--color-line);

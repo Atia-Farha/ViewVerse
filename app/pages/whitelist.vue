@@ -1,9 +1,17 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { posterThumb } from '~/utils/tmdb.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'whitelist' });
-useHead({ title: 'ViewVerse. My List' });
+useHead({
+	title: 'ViewVerse. My List',
+	meta: shareHeadMeta({
+		title: 'My Watchlist | ViewVerse',
+		description: 'Your saved watchlist of movies and TV shows on ViewVerse — everything you want to watch, in one place.',
+		path: '/whitelist',
+	}),
+});
 
 const router = useRouter();
 const { items, count, movies, tvShows, remove, clear } = useWhitelist();
@@ -146,9 +154,9 @@ function goTo(path) {
 	text-transform: uppercase;
 	cursor: pointer;
 	transition:
-		color 160ms ease,
-		border-color 160ms ease,
-		background-color 160ms ease;
+		color 500ms ease,
+		border-color 500ms ease,
+		background-color 500ms ease;
 }
 
 .whitelist-page__filter:hover {
@@ -176,8 +184,8 @@ function goTo(path) {
 	text-transform: uppercase;
 	cursor: pointer;
 	transition:
-		color 160ms ease,
-		border-color 160ms ease;
+		color 500ms ease,
+		border-color 500ms ease;
 }
 
 .whitelist-page__clear:hover {
@@ -187,7 +195,9 @@ function goTo(path) {
 
 .whitelist-page__grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	/* auto-fit (not auto-fill): empty tracks collapse so no phantom
+	   border lines appear in unused columns of the grid. */
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 0;
 	border-top: 1px solid var(--color-line);
 }
@@ -201,8 +211,8 @@ function goTo(path) {
 	border-bottom: 1px solid var(--color-line);
 	border-left: 2px solid transparent;
 	transition:
-		border-left-color 160ms ease,
-		background-color 160ms ease;
+		border-left-color 500ms ease,
+		background-color 500ms ease;
 }
 
 .whitelist-card:hover {
@@ -233,7 +243,7 @@ function goTo(path) {
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .whitelist-card:hover .whitelist-card__title {

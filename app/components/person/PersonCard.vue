@@ -49,7 +49,7 @@ const link = computed(() => (props.item ? `/person/${props.item.id}` : '#'));
 	background-color: var(--color-brand);
 	transform: scaleX(0);
 	transform-origin: left center;
-	transition: transform 220ms ease;
+	transition: transform 500ms ease;
 	pointer-events: none;
 }
 
@@ -76,7 +76,7 @@ const link = computed(() => (props.item ? `/person/${props.item.id}` : '#'));
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .person-card:hover .person-card__name {

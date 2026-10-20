@@ -46,11 +46,11 @@ function onClick(event) {
 	border: 1px solid transparent;
 	cursor: pointer;
 	transition:
-		background-color 160ms ease,
-		color 160ms ease,
-		transform 100ms ease,
-		border-color 160ms ease,
-		opacity 160ms ease;
+		background-color 500ms ease,
+		color 500ms ease,
+		transform 500ms ease,
+		border-color 500ms ease,
+		opacity 500ms ease;
 	user-select: none;
 	white-space: nowrap;
 }

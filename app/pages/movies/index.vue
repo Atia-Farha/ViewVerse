@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies' });
-useHead({ title: 'ViewVerse. Movies' });
+useHead({
+	title: 'ViewVerse. Movies',
+	meta: shareHeadMeta({
+		title: 'Popular Movies | ViewVerse',
+		description: 'Discover the most popular movies right now — from blockbuster releases to timeless classics, curated on ViewVerse.',
+		path: '/movies',
+	}),
+});
 
 const tmdb = useTmdb();
 

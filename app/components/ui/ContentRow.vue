@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .content-row__link:hover {
@@ -189,8 +189,8 @@ onBeforeUnmount(() => {
 	cursor: pointer;
 	opacity: 0;
 	transition:
-		opacity 200ms ease,
-		color 160ms ease;
+		opacity 500ms ease,
+		color 500ms ease;
 	z-index: 2;
 }
 

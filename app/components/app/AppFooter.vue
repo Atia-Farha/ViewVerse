@@ -7,7 +7,6 @@ const year = new Date().getFullYear();
 		<h2 id="app-footer-heading" class="visually-hidden">Site footer</h2>
 
 		<div class="app-footer__inner">
-			<!-- Top: brand block + nav columns -->
 			<div class="app-footer__top">
 				<section class="app-footer__brand-block" aria-label="About ViewVerse">
 					<div class="app-footer__brand-row">
@@ -65,7 +64,6 @@ const year = new Date().getFullYear();
 
 			<hr class="app-footer__rule" aria-hidden="true" />
 
-			<!-- Bottom: copyright -->
 			<p class="app-footer__copyright">© {{ year }} ViewVerse. All rights reserved.</p>
 		</div>
 	</footer>
@@ -92,9 +90,14 @@ const year = new Date().getFullYear();
 }
 
 .app-footer__inner {
-	max-width: var(--layout-max);
-	margin: 0 auto;
 	padding: 56px 4vw 32px;
+}
+
+@media (min-width: 1024px) {
+	.app-footer__inner {
+		max-width: var(--layout-max);
+		margin: 0 auto;
+	}
 }
 
 .app-footer__top {
@@ -153,14 +156,14 @@ const year = new Date().getFullYear();
 
 .app-footer__columns {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 32px 24px;
+	grid-template-columns: 1fr;
+	gap: 32px;
 }
 
 @media (min-width: 768px) {
 	.app-footer__columns {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 40px;
+		gap: 40px 24px;
 	}
 }
 
@@ -193,7 +196,7 @@ const year = new Date().getFullYear();
 	font-size: 0.88rem;
 	line-height: 1.4;
 	text-decoration: none;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .app-footer__column-list a:hover,
@@ -229,10 +232,15 @@ const year = new Date().getFullYear();
 
 .app-footer__disclaimer {
 	margin: 16px 0 0;
-	max-width: 32ch;
 	font-size: 0.75rem;
 	line-height: 1.5;
 	color: var(--color-surface-500);
+}
+
+@media (min-width: 768px) {
+	.app-footer__disclaimer {
+		max-width: 32ch;
+	}
 }
 
 .app-footer__rule {
@@ -240,21 +248,6 @@ const year = new Date().getFullYear();
 	background-color: var(--color-line);
 	border: 0;
 	margin: 48px 0 24px;
-}
-
-@media (min-width: 768px) {
-	.app-footer__rule {
-		position: relative;
-		background: transparent;
-	}
-
-	.app-footer__rule::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(to right, var(--color-line) 0%, var(--color-line) 70%, var(--color-brand) 100%);
-		opacity: 0.35;
-	}
 }
 
 .app-footer__copyright {

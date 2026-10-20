@@ -1,9 +1,17 @@
 <script setup>
 import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies-upcoming' });
-useHead({ title: 'ViewVerse. Upcoming Movies' });
+useHead({
+	title: 'ViewVerse. Upcoming Movies',
+	meta: shareHeadMeta({
+		title: 'Upcoming Movies | ViewVerse',
+		description: 'Get an early look at the most anticipated upcoming movies — release dates, cast, and everything we know so far on ViewVerse.',
+		path: '/movies/upcoming',
+	}),
+});
 
 const tmdb = useTmdb();
 

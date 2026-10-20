@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { normalizeList } from '~/utils/media.js';
+import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'genre' });
 
@@ -66,9 +67,18 @@ watch(activeType, () => {
 
 await Promise.all([loadGenreMeta(), load()]);
 
-useHead(() => ({
-	title: `${genreName.value}. ViewVerse`,
-}));
+useHead(() => {
+	const label = genreName.value;
+	const kind = activeType.value === 'tv' ? 'TV Shows' : 'Movies';
+	return {
+		title: `${label}. ViewVerse`,
+		meta: shareHeadMeta({
+			title: `${label} ${kind} | ViewVerse`,
+			description: `Browse the most popular ${label.toLowerCase()} ${kind.toLowerCase()} — hand-picked rows sorted by popularity on ViewVerse.`,
+			path: `/genre/${genreId.value}`,
+		}),
+	};
+});
 </script>
 
 <template>
@@ -143,7 +153,7 @@ useHead(() => ({
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	cursor: pointer;
-	transition: color 160ms ease;
+	transition: color 500ms ease;
 }
 
 .genre-page__tab:hover {
