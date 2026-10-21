@@ -222,11 +222,16 @@ watch(
 <template>
 	<div class="video-player">
 		<div class="video-player__source-bar">
-			<span class="video-player__source-label">Source</span>
-			<div class="video-player__source-btns" role="group" aria-label="Streaming source">
-				<button v-for="p in PROVIDERS" :key="p.id" type="button" class="video-player__source-btn" :class="{ 'video-player__source-btn--active': activeProvider === p.id }" :aria-pressed="activeProvider === p.id" @click="selectProvider(p.id)">
-					{{ p.label }}
-				</button>
+			<label for="video-source-select" class="video-player__source-label">Source</label>
+			<div class="video-player__select-wrap">
+				<select id="video-source-select" class="video-player__select" :value="activeProvider" @change="(e) => selectProvider(e.target.value)">
+					<option v-for="p in PROVIDERS" :key="p.id" :value="p.id">
+						{{ p.label }}
+					</option>
+				</select>
+				<svg viewBox="0 0 24 24" aria-hidden="true" class="video-player__select-arrow">
+					<path fill="currentColor" d="M7 10l5 5 5-5z" />
+				</svg>
 			</div>
 		</div>
 
@@ -273,59 +278,71 @@ watch(
 .video-player__source-bar {
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 8px 12px;
+	gap: 10px;
+	padding: 6px 12px;
 	background-color: rgba(7, 7, 10, 0.88);
 	border-bottom: 1px solid var(--color-line);
 }
 
 .video-player__source-label {
 	font-family: var(--font-mono);
-	font-size: 0.65rem;
-	letter-spacing: 0.18em;
+	font-size: 0.68rem;
+	letter-spacing: 0.16em;
 	text-transform: uppercase;
-	color: var(--color-surface-500);
+	color: var(--color-surface-400);
 	white-space: nowrap;
 	flex-shrink: 0;
 }
 
-.video-player__source-btns {
-	display: flex;
-	gap: 4px;
-	flex-wrap: wrap;
+.video-player__select-wrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	min-width: 140px;
 }
 
-.video-player__source-btn {
-	padding: 4px 12px;
-	background: transparent;
-	color: var(--color-surface-400);
-	font-family: var(--font-sans);
-	font-size: 0.8rem;
-	font-weight: 500;
-	letter-spacing: 0.02em;
+.video-player__select {
+	appearance: none;
+	background-color: var(--color-bg-elevated);
+	color: var(--color-surface-50);
 	border: 1px solid var(--color-line);
 	border-radius: 0;
+	padding: 5px 28px 5px 10px;
+	font-family: var(--font-sans);
+	font-size: 0.82rem;
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	width: 100%;
 	cursor: pointer;
 	transition:
-		color 500ms ease,
 		border-color 500ms ease,
-		background-color 500ms ease;
+		color 500ms ease;
 }
 
-.video-player__source-btn:hover {
-	color: var(--color-surface-50);
-	border-color: var(--color-surface-400);
-}
-
-.video-player__source-btn--active {
-	color: var(--color-brand-ink);
-	background-color: var(--color-brand);
+.video-player__select:hover,
+.video-player__select:focus-visible {
 	border-color: var(--color-brand);
+	outline: none;
 }
 
-.video-player__source-btn--active:hover {
-	background-color: var(--color-brand-hover);
-	border-color: var(--color-brand-hover);
+.video-player__select:focus-visible {
+	outline: 2px solid var(--color-brand);
+	outline-offset: 1px;
+}
+
+.video-player__select option {
+	background-color: var(--color-bg-elevated);
+	color: var(--color-surface-100);
+	font-family: var(--font-sans);
+}
+
+.video-player__select-arrow {
+	position: absolute;
+	right: 8px;
+	width: 14px;
+	height: 14px;
+	pointer-events: none;
+	color: var(--color-brand);
 }
 
 .video-player__placeholder {
