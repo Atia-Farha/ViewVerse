@@ -54,10 +54,14 @@ const year = new Date().getFullYear();
 							</li>
 							<li>
 								<span class="app-footer__term">Streaming</span>
-								<a href="https://vidfast.pro/" target="_blank" rel="noopener noreferrer">VidFast</a>
+								<div class="app-footer__sources">
+									<a href="https://cinesrc.st/" target="_blank" rel="noopener noreferrer">CineSrc</a>
+									<a href="https://vidfast.pro/" target="_blank" rel="noopener noreferrer">VidFast</a>
+									<a href="https://nxsha.screenscape.me/" target="_blank" rel="noopener noreferrer">ScreenScape</a>
+								</div>
 							</li>
 						</ul>
-						<p class="app-footer__disclaimer">ViewVerse is an independent project. Not affiliated with TMDB or VidFast.</p>
+						<p class="app-footer__disclaimer">ViewVerse is an independent project. Not affiliated with TMDB, CineSrc, VidFast, or ScreenScape.</p>
 					</section>
 				</nav>
 			</div>
@@ -204,30 +208,41 @@ const year = new Date().getFullYear();
 	color: var(--color-brand);
 }
 
+.app-footer__column-list--meta {
+	gap: 14px;
+}
+
 .app-footer__column-list--meta li {
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 12px;
-	padding-bottom: 8px;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	padding-bottom: 12px;
 	border-bottom: 1px solid var(--color-line);
 }
 
 .app-footer__column-list--meta li:last-child {
 	border-bottom: 0;
+	padding-bottom: 0;
 }
 
 .app-footer__term {
 	font-family: var(--font-mono);
-	font-size: 0.7rem;
-	letter-spacing: 0.08em;
+	font-size: 0.68rem;
+	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--color-surface-500);
 }
 
+.app-footer__sources {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
 .app-footer__column-list--meta a {
-	font-size: 0.85rem;
-	color: var(--color-surface-200);
+	font-size: 0.88rem;
+	color: var(--color-surface-300);
 }
 
 .app-footer__disclaimer {

@@ -5,7 +5,7 @@
 **Live Site: [viewverse.pages.dev](https://viewverse.pages.dev/)**
 
 > Movie data comes from [TMDB](https://www.themoviedb.org/).
-> Streaming is powered by [VidFast](https://vidfast.pro/).
+> Streaming is powered by [CineSrc](https://cinesrc.st/), [VidFast](https://vidfast.pro/), and [ScreenScape](https://nxsha.screenscape.me/).
 
 ## What It Does
 
@@ -52,17 +52,17 @@ The watchlist is entirely local - nothing is sent to any server.
 
 ## Tech Overview
 
-| Thing      | What it is                                                        |
-| ---------- | ----------------------------------------------------------------- |
-| Framework  | [Nuxt 4](https://nuxt.com) (Vue 3)                                |
-| Styling    | [Tailwind CSS v4](https://tailwindcss.com) + scoped component CSS |
-| Movie data | [TMDB API](https://www.themoviedb.org/documentation/api)          |
-| Streaming  | [VidFast](https://vidfast.pro/) (embedded iframe player)          |
-| Fonts      | Satoshi · Cormorant Garamond · JetBrains Mono                     |
-| Deployment | Static - hosted on Cloudflare Pages                               |
+| Thing      | What it is                                                                                                                                                              |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework  | [Nuxt 4](https://nuxt.com) (Vue 3)                                                                                                                                      |
+| Styling    | [Tailwind CSS v4](https://tailwindcss.com) + scoped component CSS                                                                                                       |
+| Movie data | [TMDB API](https://www.themoviedb.org/documentation/api)                                                                                                                |
+| Streaming  | [CineSrc](https://cinesrc.st/), [VidFast](https://vidfast.pro/), [ScreenScape](https://nxsha.screenscape.me/) (embedded players with auto-failover and source selector) |
+| Fonts      | Satoshi · Cormorant Garamond · JetBrains Mono                                                                                                                           |
+| Deployment | Static - hosted on Cloudflare Pages                                                                                                                                     |
 
 ## Credits & Disclaimers
 
 - Movie and TV data provided by [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
-- Streaming provided by [VidFast](https://vidfast.pro/).
-- ViewVerse is an independent personal project for learning purposes and is not affiliated with TMDB, VidFast, or any studio or content owner.
+- Streaming provided by [CineSrc](https://cinesrc.st/), [VidFast](https://vidfast.pro/), and [ScreenScape](https://nxsha.screenscape.me/).
+- ViewVerse is an independent personal project for learning purposes and is not affiliated with TMDB, CineSrc, VidFast, ScreenScape, or any studio or content owner.
