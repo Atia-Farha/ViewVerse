@@ -114,7 +114,7 @@ const icons = {
 	color: var(--color-surface-500);
 	cursor: pointer;
 	padding: 0;
-	transition: color 300ms ease;
+	transition: color 500ms ease;
 }
 
 .toast__close:hover {
@@ -133,8 +133,8 @@ const icons = {
 }
 .toast-leave-active {
 	transition:
-		opacity 200ms ease,
-		transform 200ms ease;
+		opacity 500ms ease,
+		transform 500ms ease;
 }
 .toast-enter-from {
 	opacity: 0;

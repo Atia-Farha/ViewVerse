@@ -1,6 +1,8 @@
 <script setup>
 import { formatDate, formatRuntime, formatVoteCount, getYear } from '~/utils/format.js';
+import { buildCinesrcMovieUrl } from '~/utils/cinesrc.js';
 import { buildVidfastMovieUrl } from '~/utils/vidfast.js';
+import { buildScreenscapeMovieUrl } from '~/utils/screenscape.js';
 import { shareHeadMeta } from '~/utils/share.js';
 import { tmdbShareImage } from '~/utils/tmdb.js';
 
@@ -22,7 +24,17 @@ const error = ref(null);
 
 const playerSrc = computed(() => {
 	if (!movieId.value) return '';
+	return buildCinesrcMovieUrl(movieId.value, { autoplay: true });
+});
+
+const playerFallbackSrc = computed(() => {
+	if (!movieId.value) return '';
 	return buildVidfastMovieUrl(movieId.value, { autoPlay: true });
+});
+
+const playerScreenscapeSrc = computed(() => {
+	if (!movieId.value) return '';
+	return buildScreenscapeMovieUrl(movieId.value);
 });
 
 const hasFacts = computed(() => {
@@ -107,7 +119,7 @@ function goBack() {
 		</div>
 
 		<div v-else class="watch-page__content">
-			<VideoPlayer :src="playerSrc" />
+			<VideoPlayer :src="playerSrc" :fallback-src="playerFallbackSrc" :screenscape-src="playerScreenscapeSrc" />
 
 			<section v-if="movie" class="watch-page__info">
 				<div class="watch-page__info-grid">

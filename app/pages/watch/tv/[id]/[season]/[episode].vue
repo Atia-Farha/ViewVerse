@@ -1,5 +1,7 @@
 <script setup>
+import { buildCinesrcTvUrl } from '~/utils/cinesrc.js';
 import { buildVidfastTvUrl } from '~/utils/vidfast.js';
+import { buildScreenscapeTvUrl } from '~/utils/screenscape.js';
 import { formatVoteCount, getYear } from '~/utils/format.js';
 import { shareHeadMeta } from '~/utils/share.js';
 import { tmdbShareImage } from '~/utils/tmdb.js';
@@ -111,11 +113,24 @@ const nextEpisodeAcross = computed(() => {
 
 const playerSrc = computed(() => {
 	if (!showId.value) return '';
+	return buildCinesrcTvUrl(showId.value, seasonNumber.value, episodeNumber.value, {
+		autoplay: true,
+		autonext: true,
+	});
+});
+
+const playerFallbackSrc = computed(() => {
+	if (!showId.value) return '';
 	return buildVidfastTvUrl(showId.value, seasonNumber.value, episodeNumber.value, {
 		autoPlay: true,
 		nextButton: true,
 		autoNext: true,
 	});
+});
+
+const playerScreenscapeSrc = computed(() => {
+	if (!showId.value) return '';
+	return buildScreenscapeTvUrl(showId.value, seasonNumber.value, episodeNumber.value);
 });
 
 async function loadShow() {
@@ -329,7 +344,7 @@ function goBack() {
 		</div>
 
 		<div v-else class="watch-page__content">
-			<VideoPlayer :src="playerSrc" />
+			<VideoPlayer :src="playerSrc" :fallback-src="playerFallbackSrc" :screenscape-src="playerScreenscapeSrc" />
 
 			<section class="watch-page__info">
 				<div class="watch-page__info-grid">
