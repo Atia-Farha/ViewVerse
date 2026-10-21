@@ -1,5 +1,3 @@
-import { computed } from 'vue';
-
 const STORAGE_KEY = 'viewverse:whitelist:v1';
 const MAX_ITEMS = 500;
 
@@ -44,10 +42,13 @@ function readFromStorage() {
 }
 
 function writeToStorage(items) {
-	if (!isBrowser()) return;
+	if (!isBrowser()) return true;
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-	} catch {}
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 function keyFor(item) {
@@ -72,11 +73,15 @@ export function useWhitelist() {
 	}
 
 	function add(entry) {
-		if (!entry || typeof entry.id !== 'number') return false;
-		if (entry.media_type !== 'movie' && entry.media_type !== 'tv') return false;
+		if (!entry || typeof entry.id !== 'number') return { ok: false, error: 'invalid' };
+		if (entry.media_type !== 'movie' && entry.media_type !== 'tv') return { ok: false, error: 'invalid' };
 		const target = keyFor({ id: entry.id, media_type: entry.media_type });
 		const existing = items.value.findIndex((i) => keyFor(i) === target);
-		if (existing >= 0) return false;
+		if (existing >= 0) return { ok: false, error: 'exists' };
+
+		if (items.value.length >= MAX_ITEMS) {
+			return { ok: false, error: 'limit' };
+		}
 
 		const next = [
 			{
@@ -88,10 +93,12 @@ export function useWhitelist() {
 			},
 			...items.value,
 		];
-		if (next.length > MAX_ITEMS) next.length = MAX_ITEMS;
 		items.value = next;
-		writeToStorage(next);
-		return true;
+		const persisted = writeToStorage(next);
+		if (!persisted) {
+			return { ok: true, warning: 'storage_failed' };
+		}
+		return { ok: true };
 	}
 
 	function remove(id, mediaType) {
@@ -105,11 +112,11 @@ export function useWhitelist() {
 
 	function toggle(entry) {
 		if (isInList(entry.id, entry.media_type)) {
-			remove(entry.id, entry.media_type);
-			return false;
+			const ok = remove(entry.id, entry.media_type);
+			return { action: 'removed', ok };
 		}
-		add(entry);
-		return true;
+		const res = add(entry);
+		return { action: 'added', ...res };
 	}
 
 	function clear() {

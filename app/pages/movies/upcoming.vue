@@ -1,14 +1,13 @@
 <script setup>
-import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies-upcoming' });
 useHead({
-	title: 'ViewVerse. Upcoming Movies',
+	title: 'Upcoming Movies | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'Upcoming Movies | ViewVerse',
-		description: 'Get an early look at the most anticipated upcoming movies — release dates, cast, and everything we know so far on ViewVerse.',
+		description: 'Get an early look at the most anticipated upcoming movies on ViewVerse.',
 		path: '/movies/upcoming',
 	}),
 });
@@ -53,7 +52,7 @@ await load();
 		<div v-if="pending">
 			<ContentGrid :items="[]" :show-skeletons="true" media-type="movie" />
 		</div>
-		<ErrorState v-else-if="error" :message="error.message" @retry="refresh" />
+		<ErrorState v-else-if="error" title="Unable to load upcoming movies" :message="error.message" @retry="refresh" />
 		<EmptyState icon="film" v-else-if="items.length === 0" title="No upcoming movies" message="We couldn't find any upcoming releases right now." />
 		<ContentGrid v-else :items="items" media-type="movie" />
 	</CategoryListPage>

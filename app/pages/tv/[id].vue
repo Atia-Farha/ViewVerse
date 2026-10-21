@@ -1,14 +1,13 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import { posterLarge } from '~/utils/tmdb.js';
+import { posterLarge, tmdbShareImage } from '~/utils/tmdb.js';
 import { formatDate, formatVoteCount, getYear } from '~/utils/format.js';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
-import { tmdbShareImage } from '~/utils/tmdb.js';
 
 const route = useRoute();
 const router = useRouter();
 const tmdb = useTmdb();
+const toast = useToast();
 
 const couldNotFindShow = "We couldn't find this show.";
 
@@ -30,6 +29,7 @@ const seasons = ref([]);
 const seasonNumber = ref(1);
 const episodes = ref([]);
 const episodesLoading = ref(false);
+const episodesError = ref(false);
 
 const seasonsForSelector = computed(() => {
 	return seasons.value.filter((s) => typeof s.season_number === 'number');
@@ -38,12 +38,17 @@ const seasonsForSelector = computed(() => {
 async function loadEpisodes(season) {
 	if (!showId.value || !Number.isFinite(season)) return;
 	episodesLoading.value = true;
+	episodesError.value = false;
 	try {
 		const data = await tmdb.tvSeason(showId.value, season);
 		episodes.value = Array.isArray(data?.episodes) ? data.episodes : [];
-	} catch (err) {
-		console.warn('[tv] season load failed', err);
+		if (episodes.value.length === 0) {
+			episodesError.value = true;
+		}
+	} catch {
 		episodes.value = [];
+		episodesError.value = true;
+		toast.error('Could not load episodes for this season. Please try again.');
 	} finally {
 		episodesLoading.value = false;
 	}
@@ -68,7 +73,6 @@ async function load() {
 		show.value = {
 			id: data.id,
 			title: data.name,
-			originalTitle: data.original_name,
 			tagline: data.tagline,
 			overview: data.overview,
 			rating: typeof data.vote_average === 'number' ? data.vote_average : null,
@@ -121,7 +125,7 @@ watch(
 		const description = value.tagline || value.overview || '';
 		const image = tmdbShareImage(value.backdropPath || value.posterPath);
 		useHead({
-			title: `${value.title}${year}. ViewVerse`,
+			title: `${value.title}${year} | ViewVerse`,
 			meta: shareHeadMeta({
 				title: `${value.title}${year} | ViewVerse`,
 				description,
@@ -149,11 +153,6 @@ const posterUrl = computed(() => posterLarge(show.value?.posterPath));
 function playFirst() {
 	if (!show.value) return;
 	router.push(`/watch/tv/${show.value.id}/${seasonNumber.value}/1`);
-}
-
-function playEpisode(episode) {
-	if (!show.value || !episode) return;
-	router.push(`/watch/tv/${show.value.id}/${episode.season_number}/${episode.episode_number}`);
 }
 
 const showFacts = computed(() => {
@@ -238,7 +237,8 @@ const showFacts = computed(() => {
 				<TvSeasonSelector v-model="seasonNumber" :seasons="seasonsForSelector" />
 			</header>
 			<div class="tv-details__seasons-body">
-				<EpisodeList :episodes="episodes" :loading="episodesLoading" :tv-id="show.id" @play="playEpisode" />
+				<ErrorState v-if="episodesError && !episodesLoading" title="Episodes unavailable" message="We couldn't load the episodes for this season." @retry="loadEpisodes(seasonNumber)" />
+				<EpisodeList v-else :episodes="episodes" :loading="episodesLoading" :tv-id="show.id" />
 			</div>
 		</section>
 

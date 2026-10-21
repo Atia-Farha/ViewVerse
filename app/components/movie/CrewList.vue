@@ -1,6 +1,4 @@
 <script setup>
-import { computed, ref } from 'vue';
-
 const props = defineProps({
 	crew: { type: Array, default: () => [] },
 });
@@ -94,15 +92,18 @@ function personKey(person) {
 
 <style scoped>
 .credits {
-	padding: 56px 0 0;
+	padding: 24px 4vw 0;
+	max-width: var(--layout-max);
+	margin: 0 auto;
+	width: 100%;
 }
 
 .credits__head {
 	display: flex;
 	align-items: center;
 	gap: 14px;
-	width: calc(100% - 8vw);
-	margin: 0 4vw;
+	width: 100%;
+	margin: 0;
 	padding: 0 0 10px;
 	background: transparent;
 	border: 0;
@@ -141,9 +142,8 @@ function personKey(person) {
 .credits__body {
 	display: flex;
 	flex-direction: column;
-	padding: 28px 4vw 0;
-	max-width: var(--layout-max);
-	margin: 0 auto;
+	padding: 28px 0 0;
+	width: 100%;
 }
 
 .credits__group {

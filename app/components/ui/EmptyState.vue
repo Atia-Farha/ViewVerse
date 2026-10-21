@@ -5,7 +5,7 @@ const props = defineProps({
 	icon: {
 		type: String,
 		default: 'search',
-		validator: (v) => ['search', 'bookmark', 'film', 'tv', 'list'].includes(v),
+		validator: (v) => ['search', 'bookmark', 'film', 'tv', 'list', 'user'].includes(v),
 	},
 });
 
@@ -15,9 +15,19 @@ const icons = {
 	film: 'M4 4h16v16H4zM4 8h16M4 16h16M8 4v16M12 4v16M16 4v16',
 	tv: 'M3 6h18v12H3zM8 22h8',
 	list: 'M4 6h16M4 12h16M4 18h10',
+	user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z',
 };
 
 const iconPath = icons[props.icon] || icons.search;
+
+const displayTitle = computed(() => props.title?.trim() || 'Nothing here yet');
+
+const displayMessage = computed(() => {
+	const raw = props.message?.trim();
+	if (!raw) return '';
+	if (raw.toLowerCase() === displayTitle.value.toLowerCase()) return '';
+	return raw;
+});
 </script>
 
 <template>
@@ -28,10 +38,10 @@ const iconPath = icons[props.icon] || icons.search;
 			</svg>
 		</div>
 		<h3 class="empty-state__title">
-			{{ title }}
+			{{ displayTitle }}
 		</h3>
-		<p v-if="message" class="empty-state__message">
-			{{ message }}
+		<p v-if="displayMessage" class="empty-state__message">
+			{{ displayMessage }}
 		</p>
 		<slot />
 	</div>

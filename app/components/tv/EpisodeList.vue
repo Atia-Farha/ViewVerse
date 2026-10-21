@@ -7,9 +7,6 @@ const props = defineProps({
 	tvId: { type: [Number, String], default: null },
 });
 
-// Kept for forward compatibility — page-level handlers can still react to play.
-defineEmits(['play']);
-
 function stillUrl(episode) {
 	return stillImage(episode.still_path, 'w300');
 }
@@ -132,7 +129,6 @@ function canWatchEpisode(episode) {
 	transition: background-color 500ms ease;
 }
 
-/* The whole row is the target. Padding lives on the link so the click area stays big. */
 .episodes__link {
 	display: grid;
 	grid-template-columns: minmax(140px, 22%) auto 1fr auto;
@@ -164,8 +160,6 @@ function canWatchEpisode(episode) {
 	overflow: hidden;
 }
 
-/* Stacked episode number — large monospace digits on top, "Exx" caption beneath,
-   with a thin vertical accent separating the number from the title. */
 .episodes__number {
 	display: flex;
 	flex-direction: column;
@@ -250,7 +244,6 @@ function canWatchEpisode(episode) {
 	overflow: hidden;
 }
 
-/* Hover-revealed play indicator: hidden + offset until the row is hovered. */
 .episodes__play {
 	display: flex;
 	align-items: center;
@@ -282,7 +275,6 @@ function canWatchEpisode(episode) {
 	height: 18px;
 }
 
-/* Layout: stack the number/title on narrow screens so the still keeps a good size. */
 @media (max-width: 720px) {
 	.episodes__link {
 		grid-template-columns: minmax(110px, 35%) 1fr auto;
@@ -324,7 +316,6 @@ function canWatchEpisode(episode) {
 	}
 }
 
-/* Skeleton rows echo the same grid so there's no jump when content swaps in. */
 .episodes__skeleton {
 	display: flex;
 	flex-direction: column;

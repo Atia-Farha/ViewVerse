@@ -237,12 +237,6 @@ const year = new Date().getFullYear();
 	color: var(--color-surface-500);
 }
 
-@media (min-width: 768px) {
-	.app-footer__disclaimer {
-		max-width: 32ch;
-	}
-}
-
 .app-footer__rule {
 	height: 1px;
 	background-color: var(--color-line);

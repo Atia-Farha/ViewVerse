@@ -1,12 +1,11 @@
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue';
 import { useDebouncedSearch } from '~/composables/useDebouncedSearch.js';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'search' });
 useHead({
-	title: 'ViewVerse. Search',
+	title: 'Search | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'Search Movies and TV Shows | ViewVerse',
 		description: 'Search across movies, TV shows, and people to find what you want to watch next on ViewVerse.',
@@ -35,13 +34,6 @@ async function fetchSearchResults(value) {
 const { query, setQuery, results, isLoading, error, lastCompletedQuery, reset } = useDebouncedSearch(fetchSearchResults, { debounceMs: 300 });
 
 const hasQuery = computed(() => query.value.trim().length > 0);
-
-const counts = computed(() => ({
-	all: results.value?.length || 0,
-	movie: (results.value || []).filter((r) => r.media_type === 'movie').length,
-	tv: (results.value || []).filter((r) => r.media_type === 'tv').length,
-	person: (results.value || []).filter((r) => r.media_type === 'person').length,
-}));
 
 const filteredResults = computed(() => {
 	if (!results.value) return [];
@@ -127,10 +119,6 @@ onMounted(async () => {
 	margin: 0 auto;
 }
 
-/* When GenresList is nested inside .search-page, the parent already
-   provides the 4vw gutter, so suppress the child component's own padding
-   to avoid doubling. Drop the top padding so the cards sit right under the
-   search bar (the headline/rule are hidden via hide-header prop). */
 .search-page :deep(.genres-list) {
 	padding: 32px 0 48px;
 }

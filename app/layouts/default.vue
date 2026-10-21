@@ -1,4 +1,24 @@
-<script setup></script>
+<script setup>
+const { success: toastSuccess, warning: toastWarning } = useToast();
+
+function onOffline() {
+	toastWarning('You appear to be offline. Some content may not load.');
+}
+
+function onOnline() {
+	toastSuccess('Back online. Connection restored.');
+}
+
+onMounted(() => {
+	window.addEventListener('offline', onOffline);
+	window.addEventListener('online', onOnline);
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener('offline', onOffline);
+	window.removeEventListener('online', onOnline);
+});
+</script>
 
 <template>
 	<div class="app-shell">
@@ -7,6 +27,7 @@
 			<slot />
 		</main>
 		<AppFooter />
+		<Toast />
 	</div>
 </template>
 

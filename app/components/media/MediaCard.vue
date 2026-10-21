@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import { posterThumb } from '~/utils/tmdb.js';
 
 const props = defineProps({

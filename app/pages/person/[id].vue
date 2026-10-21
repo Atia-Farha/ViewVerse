@@ -1,5 +1,4 @@
 <script setup>
-import { computed, ref } from 'vue';
 import { profileImage, posterThumb, tmdbShareImage } from '~/utils/tmdb.js';
 import { formatDate, getYear } from '~/utils/format.js';
 import { shareHeadMeta } from '~/utils/share.js';
@@ -30,27 +29,14 @@ const castCount = computed(() => acting.value.length);
 const crewCount = computed(() => crew.value.length);
 
 const actingCredits = computed(() => {
-	const list = acting.value.map((c) => ({
+	return acting.value.map((c) => ({
 		id: c.id,
 		media_type: c.media_type,
 		title: c.title || c.name || '',
 		poster_path: c.poster_path,
-		backdrop_path: c.backdrop_path,
 		year: getYear(c.release_date || c.first_air_date),
-		rating: typeof c.vote_average === 'number' ? c.vote_average : null,
-		vote_count: typeof c.vote_count === 'number' ? c.vote_count : null,
-		overview: c.overview || null,
-		known_for: null,
 		character: c.character || null,
-		episode_count: typeof c.episode_count === 'number' ? c.episode_count : null,
-		date: c.release_date || c.first_air_date || '',
 	}));
-
-	list.sort((a, b) => {
-		if (b.date !== a.date) return (b.date || '').localeCompare(a.date || '');
-		return 0;
-	});
-	return list;
 });
 
 const crewCredits = computed(() => {
@@ -191,7 +177,7 @@ watch(
 		const description = value.biography || `Filmography and profile for ${value.name}${knownFor} on ViewVerse.`;
 		const image = tmdbShareImage(value.profile_path, 'h632');
 		useHead({
-			title: `${value.name}. ViewVerse`,
+			title: `${value.name} | ViewVerse`,
 			meta: shareHeadMeta({
 				title: `${value.name}${knownFor} | ViewVerse`,
 				description,
@@ -234,7 +220,7 @@ function goBack() {
 
 	<ErrorState v-else-if="error" :title="error.status === 404 ? 'Person not found' : 'Unable to load content'" :message="error.status === 404 ? 'We could not find this person.' : 'Please try again.'" @retry="refresh" />
 
-	<div v-else-if="!person" />
+	<EmptyState icon="user" v-else-if="!person" title="Person not found" message="We couldn't load information for this person." />
 
 	<div v-else class="person-page">
 		<div class="person-page__back-wrap">

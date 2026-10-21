@@ -23,12 +23,20 @@ export default defineNuxtConfig({
 				{ name: 'theme-color', content: '#0b0b0f' },
 				{
 					name: 'description',
-					content: 'A performance-focused, Netflix-inspired movie and TV streaming experience.',
+					content: 'A movie and TV show streaming platform.',
 				},
 				{ property: 'og:site_name', content: 'ViewVerse' },
+				{ property: 'og:image', content: '/og-image.png' },
+				{ property: 'og:image:width', content: '1200' },
+				{ property: 'og:image:height', content: '630' },
+				{ property: 'og:image:type', content: 'image/png' },
 				{ name: 'twitter:card', content: 'summary_large_image' },
+				{ name: 'twitter:image', content: '/og-image.png' },
 			],
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+			link: [
+				{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+				{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+			],
 		},
 	},
 
@@ -94,13 +102,8 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [tailwindcss()],
 		server: {
-			allowedHosts: [''],
 			host: true,
 			cors: { origin: true },
 		},
-	},
-
-	compatibility: {
-		strict: false,
 	},
 });

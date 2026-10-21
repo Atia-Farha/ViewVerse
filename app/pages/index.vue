@@ -1,24 +1,23 @@
 <script setup>
-import { computed, ref } from 'vue';
 import { formatRuntime, getYear, truncate } from '~/utils/format.js';
 import { normalizeList, normalizeMedia } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
-import { tmdbShareImage } from '~/utils/tmdb.js';
 
 definePageMeta({
 	name: 'home',
 });
 
 useHead({
-	title: 'ViewVerse. Home',
+	title: 'Home | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'ViewVerse — Movies and TV, simplified',
-		description: 'A performance-focused, Netflix-inspired movie and TV streaming experience. Browse trending, popular, top rated, now playing, and airing today.',
+		description: 'A movie and TV show streaming platform. Browse trending, popular, top rated, now playing, and airing today.',
 		path: '/',
 	}),
 });
 
 const tmdb = useTmdb();
+const toast = useToast();
 
 const rows = ref({
 	trending: [],
@@ -32,8 +31,6 @@ const rows = ref({
 
 const errors = ref({});
 const heroMovie = ref(null);
-
-const hasErrors = computed(() => Object.values(errors.value).some(Boolean));
 
 const heroItem = computed(() => {
 	const m = heroMovie.value;
@@ -64,8 +61,7 @@ async function loadRow(name, fetcher) {
 		const data = await fetcher();
 		const results = Array.isArray(data?.results) ? data.results : [];
 		return normalizeList(results);
-	} catch (err) {
-		console.warn(`[home] row ${name} failed`, err);
+	} catch {
 		return [];
 	}
 }
@@ -76,36 +72,24 @@ async function loadHero() {
 		const top = Array.isArray(trending?.results) ? trending.results.find(Boolean) : null;
 		if (!top) return;
 		const isTv = top.media_type === 'tv' || top.first_air_date;
-		const details = isTv ? await tmdb.tvDetails(top.id) : await tmdb.movieDetails(top.id);
-		heroMovie.value = details || null;
-	} catch (err) {
-		console.warn('[home] hero failed', err);
-
 		try {
-			const trending = await tmdb.trending('all', 'week');
-			const top = Array.isArray(trending?.results) ? trending.results[0] : null;
-			if (top) {
-				const normalized = normalizeMedia(top);
-				if (normalized) {
-					heroMovie.value = {
-						...top,
-						backdrop_path: normalized.backdrop_path,
-						poster_path: normalized.poster_path,
-						runtime: null,
-						genres: [],
-					};
-
-					if (typeof heroMovie.value.vote_average !== 'number') {
-						heroMovie.value.vote_average = null;
-					}
-				}
+			const details = isTv ? await tmdb.tvDetails(top.id) : await tmdb.movieDetails(top.id);
+			heroMovie.value = details || null;
+		} catch {
+			// Fall back to using the trending item directly without full details
+			const normalized = normalizeMedia(top);
+			if (normalized) {
+				heroMovie.value = {
+					...top,
+					backdrop_path: normalized.backdrop_path,
+					poster_path: normalized.poster_path,
+					runtime: null,
+					genres: [],
+					vote_average: typeof top.vote_average === 'number' ? top.vote_average : null,
+				};
 			}
-		} catch {}
-	}
-}
-
-async function refresh() {
-	await Promise.all([loadAll(), loadHero()]);
+		}
+	} catch {}
 }
 
 async function loadAll() {
@@ -138,6 +122,14 @@ async function loadAll() {
 
 await Promise.all([loadHero(), loadAll()]);
 
+const hasErrors = computed(() => Object.values(errors.value).some(Boolean));
+
+onMounted(() => {
+	if (hasErrors.value) {
+		toast.warning('Some sections could not be loaded. The page may be incomplete.');
+	}
+});
+
 function onPlayHero(item) {
 	if (!item) return;
 	if (item.mediaType === 'tv') {
@@ -159,10 +151,6 @@ function onPlayHero(item) {
 				<Skeleton width="85%" height="14px" rounded="sm" />
 				<Skeleton width="80%" height="14px" rounded="sm" />
 			</div>
-		</div>
-
-		<div v-if="hasErrors" class="home__error">
-			<ErrorState title="Some sections failed to load" message="We couldn't fetch all recommendations. Please retry." @retry="refresh" />
 		</div>
 
 		<ContentRow title="Trending This Week" :items="rows.trending" view-all-href="/movies">
@@ -241,10 +229,6 @@ function onPlayHero(item) {
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
-}
-
-.home__error {
-	padding: 0 4vw;
 }
 
 .home__skeleton-item {

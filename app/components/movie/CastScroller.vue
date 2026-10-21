@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import { profileImage } from '~/utils/tmdb.js';
 
 defineProps({
@@ -25,7 +24,7 @@ function profileUrl(person) {
 				{{ label }}
 			</h3>
 		</header>
-		<ul :ref="(ref) => (scrollerRef = ref)" class="cast__list scroll-row">
+		<ul ref="scrollerRef" class="cast__list scroll-row">
 			<li v-for="person in people" :key="keyFor(person)" class="cast__person-wrap">
 				<NuxtLink v-if="person.id" :to="`/person/${person.id}`" class="cast__person" :aria-label="`Open ${person.name || 'person'}`">
 					<div class="cast__avatar">

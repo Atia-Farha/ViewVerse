@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import MovieCard from '~/components/movie/MovieCard.vue';
 import TvCard from '~/components/tv/TvCard.vue';
 import PersonCard from '~/components/person/PersonCard.vue';
@@ -10,7 +9,6 @@ const props = defineProps({
 	showSkeletons: { type: Boolean, default: false },
 	skeletonCount: { type: Number, default: 12 },
 	size: { type: String, default: 'md' },
-	cardComponent: { type: [Object, Function], default: null },
 });
 
 function componentFor(item) {
@@ -27,7 +25,7 @@ function keyFor(item) {
 
 <template>
 	<div class="content-grid" :class="`content-grid--${size}`">
-		<component :is="cardComponent || componentFor(item)" v-for="item in items" :key="keyFor(item)" :item="item" />
+		<component :is="componentFor(item)" v-for="item in items" :key="keyFor(item)" :item="item" />
 		<template v-if="showSkeletons">
 			<div v-for="i in skeletonCount" :key="`skeleton-${i}`" class="content-grid__skeleton">
 				<Skeleton height="100%" rounded="none" />

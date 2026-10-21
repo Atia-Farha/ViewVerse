@@ -1,5 +1,3 @@
-import { ref, watch, onScopeDispose } from 'vue';
-
 export function useDebouncedSearch(fetcher, options = {}) {
 	const { debounceMs = 300, initialQuery = '' } = options;
 

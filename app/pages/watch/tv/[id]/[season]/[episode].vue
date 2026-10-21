@@ -1,5 +1,4 @@
 <script setup>
-import { computed, reactive, ref, watch } from 'vue';
 import { buildVidfastTvUrl } from '~/utils/vidfast.js';
 import { formatVoteCount, getYear } from '~/utils/format.js';
 import { shareHeadMeta } from '~/utils/share.js';
@@ -7,12 +6,12 @@ import { tmdbShareImage } from '~/utils/tmdb.js';
 
 definePageMeta({
 	name: 'watch-tv',
-	layout: 'watch',
 });
 
 const route = useRoute();
 const router = useRouter();
 const tmdb = useTmdb();
+const toast = useToast();
 
 const showId = computed(() => {
 	const id = Number(route.params.id);
@@ -33,10 +32,9 @@ const show = ref(null);
 const episodes = ref([]);
 const error = ref(null);
 const seasonLoading = ref(false);
+const seasonError = ref(false);
 const adjacentLoading = ref({ prev: false, next: false });
 
-// seasonEpisodesCache holds every season we've fetched during this page lifetime,
-// keyed by season number. Lets Prev/Next cross seasons without a second round-trip.
 const seasonEpisodesCache = reactive(new Map());
 
 const currentEpisode = computed(() => {
@@ -72,8 +70,6 @@ const nextEpisode = computed(() => {
 	return i >= 0 && i < sorted.length - 1 ? sorted[i + 1] : null;
 });
 
-// Cross-season prev/next: when the user is at the edge of the current season,
-// fetch the adjacent season if needed and return its last / first episode.
 async function ensureSeasonFetched(season) {
 	if (typeof season !== 'number') return [];
 	if (seasonEpisodesCache.has(season)) return seasonEpisodesCache.get(season);
@@ -82,8 +78,7 @@ async function ensureSeasonFetched(season) {
 		const list = Array.isArray(data?.episodes) ? data.episodes : [];
 		seasonEpisodesCache.set(season, list);
 		return list;
-	} catch (err) {
-		console.warn('[watch] adjacent season load failed', season, err);
+	} catch {
 		return [];
 	}
 }
@@ -144,7 +139,6 @@ async function loadShow() {
 			numberOfSeasons: data.number_of_seasons,
 			numberOfEpisodes: data.number_of_episodes,
 			posterPath: data.poster_path || null,
-			genres: Array.isArray(data.genres) ? data.genres : [],
 			seasons: Array.isArray(data.seasons) ? data.seasons : [],
 		};
 	} catch (err) {
@@ -161,7 +155,7 @@ watch(
 		const stillPath = currentEpisode.value?.still_path || value.posterPath;
 		const image = tmdbShareImage(stillPath, 'w300');
 		useHead({
-			title: `${value.title}. Watch. ViewVerse`,
+			title: `${value.title} | ViewVerse`,
 			meta: shareHeadMeta({
 				title: `Watching ${value.title} ${ep} | ViewVerse`,
 				description,
@@ -177,20 +171,24 @@ watch(
 async function loadSeason() {
 	if (!showId.value) return;
 	seasonLoading.value = true;
+	seasonError.value = false;
 	try {
 		const data = await tmdb.tvSeason(showId.value, seasonNumber.value);
 		const list = Array.isArray(data?.episodes) ? data.episodes : [];
 		episodes.value = list;
 		seasonEpisodesCache.set(seasonNumber.value, list);
-	} catch (err) {
-		console.warn('[watch] season load failed', err);
+		if (list.length === 0) {
+			seasonError.value = true;
+		}
+	} catch {
 		episodes.value = [];
+		seasonError.value = true;
+		toast.error('Could not load episodes for this season.');
 	} finally {
 		seasonLoading.value = false;
 	}
 }
 
-// Eagerly prefetch adjacent seasons so Prev/Next feels instant.
 async function prefetchAdjacentSeasons() {
 	const { prev, next } = adjacentSeasonNumber.value;
 	const tasks = [];
@@ -214,12 +212,10 @@ async function refresh() {
 
 await loadAll();
 
-// Reload the episode list if the route's season changes (e.g. URL deep link).
 watch(seasonNumber, () => {
 	loadSeason();
 });
 
-// When the show loads after a refresh, prefetch neighbors too.
 watch(
 	() => show.value?.id,
 	() => {
@@ -241,7 +237,6 @@ function onSeasonChange(value) {
 	if (!showId.value) return;
 	const nextSeason = Number(value);
 	if (!Number.isFinite(nextSeason) || nextSeason === seasonNumber.value) return;
-	// Reset adjacent-loading flags so the buttons don't show as "loading" across the swap.
 	adjacentLoading.prev = false;
 	adjacentLoading.next = false;
 	router.push(`/watch/tv/${showId.value}/${nextSeason}/1`);
@@ -260,14 +255,19 @@ async function handlePrev() {
 		const adj = adjacentSeasonNumber.value.prev;
 		if (typeof adj === 'number') {
 			adjacentLoading.prev = true;
-			const list = await ensureSeasonFetched(adj);
-			adjacentLoading.prev = false;
-			if (list.length) {
-				const sorted = [...list].sort((a, b) => (a.episode_number ?? 0) - (b.episode_number ?? 0));
-				const last = sorted[sorted.length - 1];
-				router.push(`/watch/tv/${showId.value}/${adj}/${last.episode_number}`);
-			} else {
-				router.push(`/watch/tv/${showId.value}/${adj}/1`);
+			try {
+				const list = await ensureSeasonFetched(adj);
+				if (list.length) {
+					const sorted = [...list].sort((a, b) => (a.episode_number ?? 0) - (b.episode_number ?? 0));
+					const last = sorted[sorted.length - 1];
+					router.push(`/watch/tv/${showId.value}/${adj}/${last.episode_number}`);
+				} else {
+					router.push(`/watch/tv/${showId.value}/${adj}/1`);
+				}
+			} catch {
+				toast.error('Could not load the previous season. Please try again.');
+			} finally {
+				adjacentLoading.prev = false;
 			}
 		}
 		return;
@@ -281,14 +281,19 @@ async function handleNext() {
 		const adj = adjacentSeasonNumber.value.next;
 		if (typeof adj === 'number') {
 			adjacentLoading.next = true;
-			const list = await ensureSeasonFetched(adj);
-			adjacentLoading.next = false;
-			if (list.length) {
-				const sorted = [...list].sort((a, b) => (a.episode_number ?? 0) - (b.episode_number ?? 0));
-				const first = sorted[0];
-				router.push(`/watch/tv/${showId.value}/${adj}/${first.episode_number}`);
-			} else {
-				router.push(`/watch/tv/${showId.value}/${adj}/1`);
+			try {
+				const list = await ensureSeasonFetched(adj);
+				if (list.length) {
+					const sorted = [...list].sort((a, b) => (a.episode_number ?? 0) - (b.episode_number ?? 0));
+					const first = sorted[0];
+					router.push(`/watch/tv/${showId.value}/${adj}/${first.episode_number}`);
+				} else {
+					router.push(`/watch/tv/${showId.value}/${adj}/1`);
+				}
+			} catch {
+				toast.error('Could not load the next season. Please try again.');
+			} finally {
+				adjacentLoading.next = false;
 			}
 		}
 		return;
@@ -371,6 +376,7 @@ function goBack() {
 						<div class="watch-page__select-wrap">
 							<select id="watch-episode-select" class="watch-page__select" :value="episodeNumber" :disabled="seasonLoading || episodes.length === 0" @change="(e) => onEpisodeChange(e.target.value)">
 								<option v-if="seasonLoading" disabled>Loading episodes…</option>
+								<option v-else-if="seasonError" disabled>Failed to load episodes</option>
 								<option v-else-if="episodes.length === 0" disabled>No episodes available</option>
 								<template v-else>
 									<option v-for="ep in sortedEpisodes" :key="ep.episode_number" :value="ep.episode_number">

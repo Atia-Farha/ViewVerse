@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
 	id: { type: Number, required: true },
 	mediaType: { type: String, required: true },
@@ -11,16 +9,35 @@ const props = defineProps({
 });
 
 const { isInList, toggle } = useWhitelist();
+const toast = useToast();
 
 const isInListValue = computed(() => isInList(props.id, props.mediaType));
 
 function onToggle() {
-	toggle({
+	const res = toggle({
 		id: props.id,
 		media_type: props.mediaType,
 		title: props.title,
 		poster_path: props.posterPath,
 	});
+
+	if (res.action === 'added') {
+		if (res.ok) {
+			if (res.warning === 'storage_failed') {
+				toast.warning(`"${props.title}" added to My List, but browser storage limit prevented saving.`);
+			} else {
+				toast.success(`"${props.title}" added to My List.`);
+			}
+		} else if (res.error === 'limit') {
+			toast.warning('My List is full (500 items). Please remove some titles to add more.');
+		} else if (res.error === 'exists') {
+			toast.info(`"${props.title}" is already in My List.`);
+		} else {
+			toast.error('Unable to add to My List.');
+		}
+	} else if (res.action === 'removed') {
+		toast.info(`"${props.title}" removed from My List.`);
+	}
 }
 </script>
 

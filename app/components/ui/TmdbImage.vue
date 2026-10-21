@@ -1,15 +1,4 @@
 <script setup>
-import { computed, nextTick, onMounted, ref as refVar, watch } from 'vue';
-
-/**
- * TMDB serves each image at a fixed width, so the bucket in the URL implies
- * the intrinsic size — no need for the caller to pass it. Posters and
- * backdrops share some buckets (`w780` is either one), so which table to read
- * is decided by the `ratio` prop the caller already passes.
- *
- * Emitting `width`/`height` lets the browser reserve the box before a byte of
- * image data arrives, which is what keeps CLS at zero for the card grids.
- */
 const POSTER_DIMS = {
 	w185: [185, 278],
 	w342: [342, 513],
@@ -62,9 +51,9 @@ const props = defineProps({
 	height: { type: [Number, null], default: null },
 });
 
-const hasLoaded = refVar(false);
-const errored = refVar(false);
-const imgEl = refVar(null);
+const hasLoaded = ref(false);
+const errored = ref(false);
+const imgEl = ref(null);
 
 function onLoad() {
 	hasLoaded.value = true;

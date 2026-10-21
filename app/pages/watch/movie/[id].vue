@@ -1,5 +1,4 @@
 <script setup>
-import { computed, ref } from 'vue';
 import { formatDate, formatRuntime, formatVoteCount, getYear } from '~/utils/format.js';
 import { buildVidfastMovieUrl } from '~/utils/vidfast.js';
 import { shareHeadMeta } from '~/utils/share.js';
@@ -7,7 +6,6 @@ import { tmdbShareImage } from '~/utils/tmdb.js';
 
 definePageMeta({
 	name: 'watch-movie',
-	layout: 'watch',
 });
 
 const route = useRoute();
@@ -46,7 +44,6 @@ async function load() {
 		movie.value = {
 			id: data.id,
 			title: data.title,
-			tagline: data.tagline,
 			overview: data.overview,
 			rating: typeof data.vote_average === 'number' ? data.vote_average : null,
 			voteCount: formatVoteCount(data.vote_count),
@@ -71,7 +68,7 @@ watch(
 		const description = value.overview || `Watch ${value.title} on ViewVerse.`;
 		const image = tmdbShareImage(value.backdropPath || value.posterPath);
 		useHead({
-			title: `${value.title}. Watch. ViewVerse`,
+			title: `${value.title} | ViewVerse`,
 			meta: shareHeadMeta({
 				title: `Watching ${value.title}${year} | ViewVerse`,
 				description,
@@ -103,7 +100,7 @@ function goBack() {
 
 <template>
 	<WatchPage :title="movie?.title" @back="goBack">
-		<ErrorState v-if="error" title="Unable to load the player" :message="error.message || 'Please try again.'" @retry="refresh" />
+		<ErrorState v-if="error" :title="error.status === 404 ? 'Movie not found' : 'Unable to load the player'" :message="error.status === 404 ? 'We could not find the requested movie.' : error.message || 'Please try again.'" :show-retry="error.status !== 404" @retry="refresh" />
 
 		<div v-else-if="!movie" class="watch-page__loading">
 			<Skeleton height="56.25vw" rounded="none" />

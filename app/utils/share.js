@@ -1,36 +1,35 @@
 import { truncate } from '~/utils/format.js';
 
-/**
- * Read the configured public site URL without requiring an active Nuxt
- * instance.
- *
- * `useRuntimeConfig()` throws (NUXT_E1001) when called outside a Nuxt context —
- * and unhead evaluates `useHead` getters lazily during prerender, *after* the
- * component setup scope has closed. Reading the compile-time inlined value
- * directly keeps `siteOrigin()` safe to call from anywhere: page setup, head
- * resolution, plain utils, or prerender internals.
- */
-function readConfiguredSiteUrl() {
-	// Nuxt inlines NUXT_PUBLIC_* into import.meta.env at build time, so this is
-	// available on both server and client with no runtime context needed.
-	const fromEnv = import.meta.env?.NUXT_PUBLIC_SITE_URL;
-	if (fromEnv) return String(fromEnv).replace(/\/+$/, '');
+let cachedSiteUrl = null;
 
-	// Fall back to runtimeConfig only when we're safely inside a Nuxt context.
+function readConfiguredSiteUrl() {
+	if (cachedSiteUrl !== null) return cachedSiteUrl;
+
+	const fromEnv = import.meta.env?.NUXT_PUBLIC_SITE_URL;
+	if (fromEnv) {
+		cachedSiteUrl = String(fromEnv).replace(/\/+$/, '');
+		return cachedSiteUrl;
+	}
+
+	try {
+		const nuxtApp = useNuxtApp();
+		if (nuxtApp?.$config?.public?.siteUrl) {
+			cachedSiteUrl = String(nuxtApp.$config.public.siteUrl).replace(/\/+$/, '');
+			return cachedSiteUrl;
+		}
+	} catch {}
+
 	try {
 		const configured = useRuntimeConfig().public?.siteUrl;
-		if (configured) return String(configured).replace(/\/+$/, '');
-	} catch {
-		/* no Nuxt context — fall through to the request/window fallbacks */
-	}
+		if (configured) {
+			cachedSiteUrl = String(configured).replace(/\/+$/, '');
+			return cachedSiteUrl;
+		}
+	} catch {}
+
 	return '';
 }
 
-/**
- * Build the absolute origin used for og:url and share links.
- * Falls back to the current request origin on the server and
- * `window.location.origin` on the client when nothing is configured.
- */
 export function siteOrigin() {
 	const configured = readConfiguredSiteUrl();
 	if (configured) return configured;
@@ -47,10 +46,6 @@ export function siteOrigin() {
 	return typeof window !== 'undefined' ? window.location.origin : '';
 }
 
-/**
- * Absolute URL for a route path, used for `og:url`.
- * Returns the bare path when no origin is known so we never emit a broken link.
- */
 export function absoluteUrl(path) {
 	if (!path) return '';
 	const origin = siteOrigin();
@@ -58,34 +53,36 @@ export function absoluteUrl(path) {
 	return origin ? `${origin}${normalised}` : normalised;
 }
 
-/**
- * Build the raw `head.meta` array entries for share-preview metadata.
- * Returns the object shape that spread-into `useHead({ meta: [...] })` expects,
- * because `useHead` does not translate camelCase shorthand the way `useSeoMeta` does.
- *
- * Set once in nuxt.config: `og:site_name`, `twitter:card=summary_large_image`.
- *
- * @param {object} input
- * @param {string} input.title       Page title (used for og:title and twitter:title).
- * @param {string} [input.description] Raw text; truncated to ~155 chars.
- * @param {string} [input.path]      Route path for og:url.
- * @param {string} [input.image]     Absolute share image URL (prefer a 16:9 backdrop).
- * @param {string} [input.type]      og:type. Defaults to 'website'.
- */
 export function shareHeadMeta({ title, description, path, image, type = 'website' }) {
 	const meta = [];
+	const desc = description ? truncate(description, 155) : '';
 
-	if (description) meta.push({ name: 'description', content: truncate(description, 155) });
+	if (desc) meta.push({ name: 'description', content: desc });
 
 	meta.push({ property: 'og:type', content: type });
 	meta.push({ property: 'og:title', content: title });
-	if (description) meta.push({ property: 'og:description', content: truncate(description, 155) });
+	if (desc) meta.push({ property: 'og:description', content: desc });
 	if (path) meta.push({ property: 'og:url', content: absoluteUrl(path) });
-	if (image) meta.push({ property: 'og:image', content: image });
+
+	const isCustomImage = Boolean(image);
+	const defaultImage = absoluteUrl('/og-image.png');
+	const shareImage = isCustomImage ? (image.startsWith('http') ? image : absoluteUrl(image)) : defaultImage;
+
+	if (shareImage) {
+		meta.push({ property: 'og:image', content: shareImage });
+		if (!isCustomImage) {
+			meta.push({ property: 'og:image:width', content: '1200' });
+			meta.push({ property: 'og:image:height', content: '630' });
+			meta.push({ property: 'og:image:type', content: 'image/png' });
+		}
+		if (title) meta.push({ property: 'og:image:alt', content: title });
+
+		meta.push({ name: 'twitter:image', content: shareImage });
+		if (title) meta.push({ name: 'twitter:image:alt', content: title });
+	}
 
 	meta.push({ name: 'twitter:title', content: title });
-	if (description) meta.push({ name: 'twitter:description', content: truncate(description, 155) });
-	if (image) meta.push({ name: 'twitter:image', content: image });
+	if (desc) meta.push({ name: 'twitter:description', content: desc });
 
 	return meta;
 }

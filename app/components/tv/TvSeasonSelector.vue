@@ -1,6 +1,4 @@
 <script setup>
-import { computed, onMounted } from 'vue';
-
 const props = defineProps({
 	seasons: { type: Array, default: () => [] },
 	modelValue: { type: Number, default: 1 },
@@ -8,8 +6,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-// TMDB returns season 0 as "Specials" — often hundreds of one-off segments
-// that would drown out the main list, so it gets its own optgroup.
 const playableSeasons = computed(() => props.seasons.filter((s) => typeof s.season_number === 'number' && s.season_number > 0).sort((a, b) => a.season_number - b.season_number));
 
 const specials = computed(() => props.seasons.filter((s) => typeof s.season_number === 'number' && s.season_number === 0).sort((a, b) => a.season_number - b.season_number));
@@ -22,7 +18,6 @@ function episodeLabel(season) {
 	return typeof season.episode_count === 'number' ? `${season.episode_count} ep` : null;
 }
 
-// Land on a real season rather than Specials when the incoming value is 0/missing.
 onMounted(() => {
 	const current = props.modelValue;
 	const isValid = playableSeasons.value.some((s) => s.season_number === current);
@@ -105,7 +100,6 @@ function onChange(event) {
 	outline-offset: 2px;
 }
 
-/* Keep optgroup headers visually quiet so the list still reads as one control. */
 .season-selector__select option,
 .season-selector__select optgroup {
 	background-color: var(--color-bg-elevated);

@@ -1,5 +1,4 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
@@ -71,10 +70,10 @@ useHead(() => {
 	const label = genreName.value;
 	const kind = activeType.value === 'tv' ? 'TV Shows' : 'Movies';
 	return {
-		title: `${label}. ViewVerse`,
+		title: `${label} | ViewVerse`,
 		meta: shareHeadMeta({
 			title: `${label} ${kind} | ViewVerse`,
-			description: `Browse the most popular ${label.toLowerCase()} ${kind.toLowerCase()} — hand-picked rows sorted by popularity on ViewVerse.`,
+			description: `Browse the most popular ${label.toLowerCase()} ${kind.toLowerCase()} on ViewVerse.`,
 			path: `/genre/${genreId.value}`,
 		}),
 	};
@@ -97,7 +96,7 @@ useHead(() => {
 			<ContentGrid :items="[]" :show-skeletons="true" :media-type="activeType === 'tv' ? 'tv' : 'movie'" />
 		</div>
 
-		<ErrorState v-else-if="error" :message="error.message || 'Please try again.'" @retry="refresh" />
+		<ErrorState v-else-if="error" :title="error.status === 404 ? 'Genre not found' : 'Failed to load content'" :message="error.status === 404 ? 'We could not find the requested genre.' : error.message || 'Please try again.'" @retry="refresh" />
 
 		<EmptyState v-else-if="items.length === 0" icon="film" :title="`No ${activeType === 'tv' ? 'TV shows' : 'movies'} found`" message="We couldn't find anything in this genre yet." />
 

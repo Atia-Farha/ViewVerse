@@ -17,3 +17,6 @@ logs
 .env
 .env.*
 !.env.example
+
+.kilo
+.codegraph

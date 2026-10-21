@@ -1,10 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { posterLarge } from '~/utils/tmdb.js';
+import { posterLarge, tmdbShareImage } from '~/utils/tmdb.js';
 import { formatDate, formatRuntime, getYear, formatVoteCount } from '~/utils/format.js';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
-import { tmdbShareImage } from '~/utils/tmdb.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -90,7 +88,7 @@ watch(
 		const description = value.tagline || value.overview || '';
 		const image = tmdbShareImage(value.backdropPath || value.posterPath);
 		useHead({
-			title: `${value.title}${year}. ViewVerse`,
+			title: `${value.title}${year} | ViewVerse`,
 			meta: shareHeadMeta({
 				title: `${value.title}${year} | ViewVerse`,
 				description,

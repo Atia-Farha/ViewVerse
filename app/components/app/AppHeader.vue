@@ -1,6 +1,4 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-
 const route = useRoute();
 const router = useRouter();
 const { count: whitelistCount } = useWhitelist();

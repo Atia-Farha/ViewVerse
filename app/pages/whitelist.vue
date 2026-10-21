@@ -1,19 +1,19 @@
 <script setup>
-import { computed, ref } from 'vue';
 import { posterThumb } from '~/utils/tmdb.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'whitelist' });
 useHead({
-	title: 'ViewVerse. My List',
+	title: 'My Watchlist | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'My Watchlist | ViewVerse',
-		description: 'Your saved watchlist of movies and TV shows on ViewVerse — everything you want to watch, in one place.',
+		description: 'Your saved watchlist of movies and TV shows on ViewVerse.',
 		path: '/whitelist',
 	}),
 });
 
 const router = useRouter();
+const toast = useToast();
 const { items, count, movies, tvShows, remove, clear } = useWhitelist();
 
 const activeType = ref('all');
@@ -48,12 +48,19 @@ function play(item) {
 }
 
 function removeItem(item) {
-	remove(item.id, item.media_type);
+	const ok = remove(item.id, item.media_type);
+	if (ok) {
+		toast.info(`"${item.title}" removed from My List.`);
+	}
 }
 
 function onClear() {
+	const countBefore = items.value.length;
 	const ok = typeof window !== 'undefined' && window.confirm('Clear your entire list?');
-	if (ok) clear();
+	if (ok) {
+		clear();
+		toast.info(`Cleared ${countBefore} item${countBefore === 1 ? '' : 's'} from My List.`);
+	}
 }
 
 function formatRelative(timestamp) {
@@ -195,8 +202,6 @@ function goTo(path) {
 
 .whitelist-page__grid {
 	display: grid;
-	/* auto-fit (not auto-fill): empty tracks collapse so no phantom
-	   border lines appear in unused columns of the grid. */
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 0;
 	border-top: 1px solid var(--color-line);

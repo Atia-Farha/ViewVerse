@@ -1,14 +1,13 @@
 <script setup>
-import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'movies' });
 useHead({
-	title: 'ViewVerse. Movies',
+	title: 'Popular Movies | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'Popular Movies | ViewVerse',
-		description: 'Discover the most popular movies right now — from blockbuster releases to timeless classics, curated on ViewVerse.',
+		description: 'Discover the most popular movies right now on ViewVerse.',
 		path: '/movies',
 	}),
 });
@@ -53,7 +52,7 @@ await load();
 		<div v-if="pending">
 			<ContentGrid :items="[]" :show-skeletons="true" media-type="movie" />
 		</div>
-		<ErrorState v-else-if="error" :message="error.message" @retry="refresh" />
+		<ErrorState v-else-if="error" title="Unable to load popular movies" :message="error.message" @retry="refresh" />
 		<EmptyState icon="film" v-else-if="items.length === 0" title="No movies to show" message="We couldn't find any movies in this category." />
 		<ContentGrid v-else :items="items" media-type="movie" />
 	</CategoryListPage>

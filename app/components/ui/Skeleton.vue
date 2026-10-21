@@ -1,6 +1,4 @@
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
 	width: { type: [String, Number], default: '100%' },
 	height: { type: [String, Number], default: '100%' },

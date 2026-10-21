@@ -1,5 +1,4 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { VIDFAST_ORIGINS } from '~/utils/vidfast.js';
 
 const props = defineProps({
@@ -11,10 +10,6 @@ const visible = ref(false);
 const hasError = ref(false);
 const iframeRef = ref(null);
 
-// Defense in depth: only load the iframe when `src` is an absolute https
-// URL whose origin is on the VidFast allowlist. This guarantees the embedded
-// frame can never be pointed at an arbitrary origin even if the URL builder
-// or a caller changes later.
 const safeSrc = computed(() => {
 	const raw = props.src;
 	if (typeof raw !== 'string' || !raw) return '';

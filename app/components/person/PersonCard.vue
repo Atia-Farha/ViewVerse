@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import { profileImage } from '~/utils/tmdb.js';
 
 const props = defineProps({

@@ -1,14 +1,13 @@
 <script setup>
-import { ref } from 'vue';
 import { normalizeList } from '~/utils/media.js';
 import { shareHeadMeta } from '~/utils/share.js';
 
 definePageMeta({ name: 'tv-airing-today' });
 useHead({
-	title: 'ViewVerse. Airing Today',
+	title: 'TV Shows Airing Today | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'TV Shows Airing Today | ViewVerse',
-		description: 'TV shows airing new episodes today — keep up with what is on tonight, curated on ViewVerse.',
+		description: 'See which TV shows are airing today on ViewVerse.',
 		path: '/tv/airing-today',
 	}),
 });
@@ -53,7 +52,7 @@ await load();
 		<div v-if="pending">
 			<ContentGrid :items="[]" :show-skeletons="true" media-type="tv" />
 		</div>
-		<ErrorState v-else-if="error" :message="error.message" @retry="refresh" />
+		<ErrorState v-else-if="error" title="Unable to load shows airing today" :message="error.message" @retry="refresh" />
 		<EmptyState icon="tv" v-else-if="items.length === 0" title="Nothing airing today" message="We couldn't find any shows airing today." />
 		<ContentGrid v-else :items="items" media-type="tv" />
 	</CategoryListPage>

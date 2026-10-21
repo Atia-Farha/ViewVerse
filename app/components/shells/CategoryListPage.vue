@@ -4,11 +4,6 @@ defineProps({
 	subtitle: { type: String, default: null },
 	tabs: { type: Array, default: () => [] },
 });
-
-const route = useRoute();
-function isActive(to) {
-	return route.path === to || route.path.startsWith(to + '/');
-}
 </script>
 
 <template>

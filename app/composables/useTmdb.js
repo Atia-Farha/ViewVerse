@@ -1,58 +1,34 @@
-/**
- * TMDB data access.
- *
- * Three properties this cache has to hold, and why:
- *
- *  - **Bounded.** A long-lived server renders many different detail pages; an
- *    unbounded Map keeps every TMDB response for the life of the process.
- *    `MAX_ENTRIES` evicts least-recently-used once exceeded.
- *  - **Coalesced.** Several rows on the home page, and the hero, request the
- *    same list. Concurrent misses share one upstream request instead of N.
- *  - **stale-while-revalidate.** Without this, the moment the TTL lapses every
- *    request pays the full upstream latency again (~600-1000ms measured) even
- *    though the previous value is still perfectly good to show. Instead the
- *    stale value is returned immediately and exactly one request refreshes in
- *    the background.
- *
- * The trade-off this buys and its cost: responses may be up to `STALE_TTL_MS`
- * old past the TTL. For TMDB catalog data that is fine — trending and
- * top-rated lists move slowly — but it is a correctness decision, not just a
- * speed one, so it is stated here rather than left implicit.
- */
-
 const CACHE_TTL_MS = 5 * 60 * 1000;
-
-/**
- * How long past `CACHE_TTL_MS` a value may still be served while it refreshes.
- * After this it is treated as a hard miss.
- */
 const STALE_TTL_MS = 60 * 60 * 1000;
-
-/** Cap on distinct cached responses, to bound memory on a long-running process. */
 const MAX_ENTRIES = 500;
 
 const inFlight = new Map();
 const cache = new Map();
 
-/**
- * Read public runtime config without requiring an active Nuxt instance.
- *
- * During prerender (`nuxt generate`) these helpers run from Nitro's built
- * server chunks, where `useRuntimeConfig()` throws NUXT_E1001 because there is
- * no Vue/Nuxt app instance in scope. Nuxt inlines `NUXT_PUBLIC_*` into
- * `import.meta.env` at build time, so read that first and only fall back to
- * `useRuntimeConfig()` when a context genuinely exists.
- */
+let cachedConfig = null;
+
 function readPublicConfig(key) {
 	const fromEnv = import.meta.env?.[`NUXT_PUBLIC_${key.toUpperCase()}`];
 	if (fromEnv) return String(fromEnv);
 
+	if (cachedConfig?.[key]) return String(cachedConfig[key]);
+
 	try {
-		const value = useRuntimeConfig().public?.[key];
-		if (value) return String(value);
-	} catch {
-		/* no Nuxt context (e.g. prerender) — fall through to defaults */
-	}
+		const nuxtApp = useNuxtApp();
+		if (nuxtApp?.$config?.public?.[key]) {
+			cachedConfig = nuxtApp.$config.public;
+			return String(cachedConfig[key]);
+		}
+	} catch {}
+
+	try {
+		const config = useRuntimeConfig();
+		if (config?.public?.[key]) {
+			cachedConfig = config.public;
+			return String(cachedConfig[key]);
+		}
+	} catch {}
+
 	return '';
 }
 
@@ -79,10 +55,8 @@ function cacheKey(path, params) {
 	return `${path}?${JSON.stringify(normalized)}`;
 }
 
-/** Drop least-recently-inserted entries once the cache exceeds its cap. */
 function evictIfNeeded() {
 	while (cache.size > MAX_ENTRIES) {
-		// Map preserves insertion order, so the first key is the oldest.
 		const oldest = cache.keys().next().value;
 		if (oldest === undefined) break;
 		cache.delete(oldest);
@@ -90,7 +64,6 @@ function evictIfNeeded() {
 }
 
 function touch(key, entry) {
-	// Re-insert so this entry becomes the newest and is evicted last.
 	cache.delete(key);
 	cache.set(key, entry);
 }
@@ -109,12 +82,12 @@ async function tmdbFetch(path, params, options = {}) {
 			}
 
 			if (age < CACHE_TTL_MS + STALE_TTL_MS) {
-				// Fresh enough to show, stale enough to be worth refreshing.
 				touch(key, entry);
+
 				if (!skipDedupe && !inFlight.has(key)) {
-					// Kick off a refresh without making this caller wait for it.
 					tmdbFetch(path, params, { ...options, skipCache: true }).catch(() => {});
 				}
+
 				return entry.data;
 			}
 		}
@@ -168,6 +141,12 @@ async function tmdbFetch(path, params, options = {}) {
 }
 
 export function useTmdb() {
+	if (!cachedConfig) {
+		try {
+			cachedConfig = useRuntimeConfig().public;
+		} catch {}
+	}
+
 	return {
 		trending: (mediaType = 'all', timeWindow = 'week', params = {}) => tmdbFetch(`/trending/${mediaType}/${timeWindow}`, params),
 		moviePopular: (params = {}) => tmdbFetch('/movie/popular', params),
@@ -191,16 +170,9 @@ export function useTmdb() {
 		},
 		tvSeason: (id, season, params = {}) => tmdbFetch(`/tv/${id}/season/${season}`, params),
 		searchMulti: (query, params = {}) => tmdbFetch('/search/multi', { query, ...params }),
-		searchMovie: (query, params = {}) => tmdbFetch('/search/movie', { query, ...params }),
-		searchTv: (query, params = {}) => tmdbFetch('/search/tv', { query, ...params }),
 		genresMovie: () => tmdbFetch('/genre/movie/list'),
 		genresTv: () => tmdbFetch('/genre/tv/list'),
 
 		fetchRaw: (path, params, options) => tmdbFetch(path, params, options),
 	};
-}
-
-export function clearTmdbCache() {
-	cache.clear();
-	inFlight.clear();
 }

@@ -1,11 +1,22 @@
 <script setup>
-defineProps({
+const props = defineProps({
 	title: { type: String, default: 'Something went wrong' },
-	message: { type: String, default: 'Unable to load content. Please try again.' },
+	message: { type: String, default: 'Unable to load content. Please check your connection and try again.' },
 	showRetry: { type: Boolean, default: true },
 });
 
 defineEmits(['retry']);
+
+const displayTitle = computed(() => props.title?.trim() || 'Something went wrong');
+
+const displayMessage = computed(() => {
+	const raw = props.message?.trim();
+	if (!raw) return 'Unable to load content. Please check your connection and try again.';
+	if (raw.toLowerCase() === displayTitle.value.toLowerCase()) {
+		return 'Unable to load content. Please check your connection and try again.';
+	}
+	return raw;
+});
 </script>
 
 <template>
@@ -19,10 +30,10 @@ defineEmits(['retry']);
 			</svg>
 		</div>
 		<h3 class="error-state__title">
-			{{ title }}
+			{{ displayTitle }}
 		</h3>
-		<p v-if="message" class="error-state__message">
-			{{ message }}
+		<p class="error-state__message">
+			{{ displayMessage }}
 		</p>
 		<Button v-if="showRetry" variant="primary" size="md" @click="$emit('retry')">Try again</Button>
 	</div>

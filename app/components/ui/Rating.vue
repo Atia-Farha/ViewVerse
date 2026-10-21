@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import { formatRating } from '~/utils/format.js';
 
 const props = defineProps({

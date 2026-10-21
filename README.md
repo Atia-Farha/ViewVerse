@@ -1,75 +1,68 @@
-# Nuxt Minimal Starter
+# ViewVerse
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+**A clean, fast, no-account-needed platform for browsing and watching movies and TV shows. No login. No subscription. Just watch.**
 
-## Setup
+**Live Site: [viewverse.pages.dev](https://viewverse.pages.dev/)**
 
-Make sure to install dependencies:
+> Movie data comes from [TMDB](https://www.themoviedb.org/).
+> Streaming is powered by [VidFast](https://vidfast.pro/).
 
-```bash
-# npm
-npm install
+## What It Does
 
-# pnpm
-pnpm install
+ViewVerse is a web app where you can:
 
-# yarn
-yarn install
+- **Browse** trending, popular, top-rated, now playing, and upcoming movies and TV shows
+- **Watch** any movie or TV episode directly in the browser — including full season/episode selection for shows
+- **Search** across movies, TV shows, and people all at once
+- **Explore by genre** — every genre has its own browsable page
+- **Save to My List** — bookmark anything to come back to later (stored locally on your device, no account needed)
+- **Discover people** — actor and director profile pages with their full filmography
 
-# bun
-bun install
-```
+## Pages at a Glance
 
-## Development Server
+| Page                                | What you'll find                                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `/`                                 | Hero spotlight + curated rows (Trending, Popular, Top Rated, Now Playing, Upcoming, Airing Today) |
+| `/movies`                           | Full popular movies catalog                                                                       |
+| `/movies/top-rated`                 | Highest-rated movies of all time                                                                  |
+| `/movies/now-playing`               | What's in theaters right now                                                                      |
+| `/movies/upcoming`                  | Coming soon to theaters                                                                           |
+| `/tv`                               | Popular TV shows                                                                                  |
+| `/tv/top-rated`                     | Highest-rated shows of all time                                                                   |
+| `/tv/airing-today`                  | Episodes airing today                                                                             |
+| `/tv/on-the-air`                    | Shows currently running                                                                           |
+| `/movie/[id]`                       | Full movie detail — cast, crew, trailer, similar titles, and a Watch button                       |
+| `/tv/[id]`                          | Full show detail — seasons, episodes, cast, trailer, similar shows                                |
+| `/watch/movie/[id]`                 | Full-screen movie player                                                                          |
+| `/watch/tv/[id]/[season]/[episode]` | Full-screen TV episode player                                                                     |
+| `/person/[id]`                      | Actor/director profile with acting credits and crew work                                          |
+| `/search`                           | Search movies, TV shows, and people in one place                                                  |
+| `/genre/[id]`                       | Browse titles by genre                                                                            |
+| `/whitelist`                        | Your saved list — filter by Movies or TV Shows, remove items, or clear all                        |
 
-Start the development server on `http://localhost:3000`:
+## My List (Watchlist)
 
-```bash
-# npm
-npm run dev
+The watchlist is entirely local — nothing is sent to any server.
 
-# pnpm
-pnpm dev
+- Tap the **bookmark icon** on any movie or show to save it
+- Access your list anytime from the header or `/whitelist`
+- Holds up to 500 titles
+- Syncs across tabs in the same browser automatically
+- Remembers when each title was added
 
-# yarn
-yarn dev
+## Tech Overview
 
-# bun
-bun run dev
-```
+| Thing      | What it is                                                        |
+| ---------- | ----------------------------------------------------------------- |
+| Framework  | [Nuxt 4](https://nuxt.com) (Vue 3)                                |
+| Styling    | [Tailwind CSS v4](https://tailwindcss.com) + scoped component CSS |
+| Movie data | [TMDB API](https://www.themoviedb.org/documentation/api)          |
+| Streaming  | [VidFast](https://vidfast.pro/) (embedded iframe player)          |
+| Fonts      | Satoshi · Cormorant Garamond · JetBrains Mono                     |
+| Deployment | Static — hosted on Cloudflare Pages                               |
 
-## Production
+## Credits & Disclaimers
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- Movie and TV data provided by [TMDB](https://www.themoviedb.org/) — this product uses the TMDB API but is not endorsed or certified by TMDB.
+- Streaming provided by [VidFast](https://vidfast.pro/).
+- ViewVerse is an independent personal project for learning purposes and is not affiliated with TMDB, VidFast, or any studio or content owner.
