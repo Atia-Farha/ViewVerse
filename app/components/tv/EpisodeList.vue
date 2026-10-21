@@ -57,7 +57,7 @@ function canWatchEpisode(episode) {
 			</div>
 		</div>
 
-		<EmptyState v-else-if="episodes.length === 0" icon="tv" title="No episodes for this season" message="Episode information isn't available — try selecting another season." />
+		<EmptyState v-else-if="episodes.length === 0" icon="tv" title="No episodes for this season" message="Episode information isn't available. Try selecting another season." />
 
 		<ul v-else class="episodes__list">
 			<li v-for="episode in episodes" :key="episodeKey(episode)" class="episodes__item" :class="{ 'episodes__item--linked': canWatchEpisode(episode) }">

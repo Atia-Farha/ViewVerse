@@ -259,7 +259,7 @@ Before adding a new visual value, check whether an existing token can be reused.
 
 ---
 
-# 8. Performance — Highest Priority
+# 8. Performance - Highest Priority
 
 Performance and smoothness are **first-class requirements**.
 
@@ -1237,7 +1237,7 @@ Prefer maintainability over cleverness.
 
 ---
 
-# 54. DRY — With Judgment
+# 54. DRY - With Judgment
 
 Avoid unnecessary duplication.
 
@@ -1385,4 +1385,4 @@ The following rules must always be followed unless explicitly overridden:
 22. **When uncertain, inspect the existing codebase and installed packages before making assumptions.**
 23. **Prefer the simplest solution that is correct, maintainable, and performant.**
 24. **Every implementation must be evaluated for performance, accessibility, security, and edge cases.**
-25. **Code should be written for the currently installed stack—not for an older version and not for a hypothetical future stack.**
+25. **Code should be written for the currently installed stack, not for an older version and not for a hypothetical future stack.**

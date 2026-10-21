@@ -73,7 +73,7 @@ export default defineNuxtConfig({
 				compiled: async (nitro) => {
 					const tmdbToken = process.env.NUXT_PUBLIC_TMDB_TOKEN || '';
 					if (!tmdbToken) {
-						console.warn('[prerender] NUXT_PUBLIC_TMDB_TOKEN is empty — skipping genre expansion.');
+						console.warn('[prerender] NUXT_PUBLIC_TMDB_TOKEN is empty. Skipping genre expansion.');
 						return;
 					}
 					try {

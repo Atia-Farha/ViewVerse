@@ -12,11 +12,11 @@
 ViewVerse is a web app where you can:
 
 - **Browse** trending, popular, top-rated, now playing, and upcoming movies and TV shows
-- **Watch** any movie or TV episode directly in the browser — including full season/episode selection for shows
+- **Watch** any movie or TV episode directly in the browser, including full season/episode selection for shows
 - **Search** across movies, TV shows, and people all at once
-- **Explore by genre** — every genre has its own browsable page
-- **Save to My List** — bookmark anything to come back to later (stored locally on your device, no account needed)
-- **Discover people** — actor and director profile pages with their full filmography
+- **Explore by genre** - every genre has its own browsable page
+- **Save to My List** - bookmark anything to come back to later (stored locally on your device, no account needed)
+- **Discover people** - actor and director profile pages with their full filmography
 
 ## Pages at a Glance
 
@@ -31,18 +31,18 @@ ViewVerse is a web app where you can:
 | `/tv/top-rated`                     | Highest-rated shows of all time                                                                   |
 | `/tv/airing-today`                  | Episodes airing today                                                                             |
 | `/tv/on-the-air`                    | Shows currently running                                                                           |
-| `/movie/[id]`                       | Full movie detail — cast, crew, trailer, similar titles, and a Watch button                       |
-| `/tv/[id]`                          | Full show detail — seasons, episodes, cast, trailer, similar shows                                |
+| `/movie/[id]`                       | Full movie detail - cast, crew, trailer, similar titles, and a Watch button                       |
+| `/tv/[id]`                          | Full show detail - seasons, episodes, cast, trailer, similar shows                                |
 | `/watch/movie/[id]`                 | Full-screen movie player                                                                          |
 | `/watch/tv/[id]/[season]/[episode]` | Full-screen TV episode player                                                                     |
 | `/person/[id]`                      | Actor/director profile with acting credits and crew work                                          |
 | `/search`                           | Search movies, TV shows, and people in one place                                                  |
 | `/genre/[id]`                       | Browse titles by genre                                                                            |
-| `/whitelist`                        | Your saved list — filter by Movies or TV Shows, remove items, or clear all                        |
+| `/whitelist`                        | Your saved list - filter by Movies or TV Shows, remove items, or clear all                        |
 
 ## My List (Watchlist)
 
-The watchlist is entirely local — nothing is sent to any server.
+The watchlist is entirely local - nothing is sent to any server.
 
 - Tap the **bookmark icon** on any movie or show to save it
 - Access your list anytime from the header or `/whitelist`
@@ -59,10 +59,10 @@ The watchlist is entirely local — nothing is sent to any server.
 | Movie data | [TMDB API](https://www.themoviedb.org/documentation/api)          |
 | Streaming  | [VidFast](https://vidfast.pro/) (embedded iframe player)          |
 | Fonts      | Satoshi · Cormorant Garamond · JetBrains Mono                     |
-| Deployment | Static — hosted on Cloudflare Pages                               |
+| Deployment | Static - hosted on Cloudflare Pages                               |
 
 ## Credits & Disclaimers
 
-- Movie and TV data provided by [TMDB](https://www.themoviedb.org/) — this product uses the TMDB API but is not endorsed or certified by TMDB.
+- Movie and TV data provided by [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
 - Streaming provided by [VidFast](https://vidfast.pro/).
 - ViewVerse is an independent personal project for learning purposes and is not affiliated with TMDB, VidFast, or any studio or content owner.

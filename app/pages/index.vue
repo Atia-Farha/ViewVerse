@@ -10,7 +10,7 @@ definePageMeta({
 useHead({
 	title: 'Home | ViewVerse',
 	meta: shareHeadMeta({
-		title: 'ViewVerse — Movies and TV, simplified',
+		title: 'ViewVerse - Movies and TV, simplified',
 		description: 'A movie and TV show streaming platform. Browse trending, popular, top rated, now playing, and airing today.',
 		path: '/',
 	}),
@@ -155,7 +155,8 @@ function onPlayHero(item) {
 
 		<ContentRow title="Trending This Week" :items="rows.trending" view-all-href="/movies">
 			<template #default="{ item }">
-				<MovieCard :item="item" />
+				<TvCard v-if="item.media_type === 'tv'" :item="item" />
+				<MovieCard v-else :item="item" />
 			</template>
 			<template v-if="rows.trending.length === 0" #append>
 				<li v-for="i in 6" :key="`trend-skeleton-${i}`" class="home__skeleton-item">
