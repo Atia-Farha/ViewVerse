@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
 						</svg>
 						<span class="app-footer__brand-name">ViewVerse</span>
 					</div>
-					<p class="app-footer__brand-tagline">A platform for finding and watching movies and TV shows.</p>
+					<p class="app-footer__brand-tagline">A platform for browsing and watching movies and TV shows.</p>
 				</section>
 
 				<nav class="app-footer__columns" aria-label="Footer">
@@ -61,14 +61,17 @@ const year = new Date().getFullYear();
 								</div>
 							</li>
 						</ul>
-						<p class="app-footer__disclaimer">ViewVerse is an independent project. Not affiliated with TMDB, CineSrc, VidFast, or ScreenScape.</p>
+						<p class="app-footer__disclaimer">ViewVerse is an independent project created for learning purposes. Not affiliated with TMDB, CineSrc, VidFast, or ScreenScape.</p>
 					</section>
 				</nav>
 			</div>
 
 			<hr class="app-footer__rule" aria-hidden="true" />
 
-			<p class="app-footer__copyright">© {{ year }} ViewVerse. All rights reserved.</p>
+			<div class="app-footer__bottom">
+				<p class="app-footer__copyright">© {{ year }} ViewVerse. All rights reserved.</p>
+				<p class="app-footer__dedication">A little creation by Cinnamoroll, dedicated to Pompompurin <span class="app-footer__heart">♡</span></p>
+			</div>
 		</div>
 	</footer>
 </template>
@@ -110,7 +113,7 @@ const year = new Date().getFullYear();
 	gap: 40px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
 	.app-footer__top {
 		grid-template-columns: 1.1fr 2fr;
 		gap: 56px;
@@ -164,7 +167,7 @@ const year = new Date().getFullYear();
 	gap: 32px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
 	.app-footer__columns {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 40px 24px;
@@ -259,12 +262,59 @@ const year = new Date().getFullYear();
 	margin: 48px 0 24px;
 }
 
+.app-footer__bottom {
+	width: 100%;
+	display: flex;
+	flex-direction: column-reverse;
+	align-items: center;
+	justify-content: center;
+	row-gap: 1.5em;
+	text-align: center;
+}
+
 .app-footer__copyright {
 	margin: 0;
-	text-align: center;
 	font-family: var(--font-mono);
 	font-size: 0.72rem;
 	letter-spacing: 0.06em;
 	color: var(--color-surface-500);
+	text-align: center;
+}
+
+.app-footer__dedication {
+	margin: 0;
+	font-size: 0.76rem;
+	letter-spacing: 0.02em;
+	color: var(--color-surface-400);
+	text-align: center;
+	cursor: default;
+}
+
+@media (min-width: 850px) {
+	.app-footer__bottom {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		column-gap: 2rem;
+		text-align: left;
+	}
+
+	.app-footer__copyright {
+		text-align: left;
+	}
+
+	.app-footer__dedication {
+		text-align: right;
+	}
+}
+
+.app-footer__heart {
+	color: #f472b6;
+	display: inline-block;
+	transition: transform 500ms ease;
+}
+
+.app-footer__dedication:hover .app-footer__heart {
+	transform: scale(1.2);
 }
 </style>

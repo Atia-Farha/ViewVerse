@@ -1,12 +1,18 @@
 <script setup>
+import { CircleAlert, CircleCheck, Info, TriangleAlert, X } from 'lucide-vue-next';
+
 const { toasts, remove } = useToast();
 
-const icons = {
-	success: 'M20 6 9 17l-5-5',
-	error: 'M12 3 2 21h20M12 10v5M12 18v.01',
-	warning: 'M12 3 2 21h20M12 10v5M12 18v.01',
-	info: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16v.01',
+const ICONS = {
+	success: CircleCheck,
+	error: CircleAlert,
+	warning: TriangleAlert,
+	info: Info,
 };
+
+function getToastIcon(type) {
+	return ICONS[type] || Info;
+}
 </script>
 
 <template>
@@ -14,14 +20,10 @@ const icons = {
 		<div class="toast-region" aria-live="polite" aria-label="Notifications" role="region">
 			<TransitionGroup name="toast" tag="div" class="toast-list">
 				<div v-for="toast in toasts" :key="toast.id" class="toast" :class="`toast--${toast.type}`" role="status" aria-atomic="true">
-					<svg viewBox="0 0 24 24" aria-hidden="true" class="toast__icon">
-						<path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" :d="icons[toast.type] || icons.info" />
-					</svg>
+					<component :is="getToastIcon(toast.type)" class="toast__icon" :size="18" :stroke-width="1.75" aria-hidden="true" />
 					<span class="toast__message">{{ toast.message }}</span>
 					<button type="button" class="toast__close" aria-label="Dismiss" @click="remove(toast.id)">
-						<svg viewBox="0 0 24 24" aria-hidden="true">
-							<path fill="none" stroke="currentColor" stroke-width="1.5" d="M5 5l14 14M19 5L5 19" />
-						</svg>
+						<X :size="14" :stroke-width="1.75" aria-hidden="true" />
 					</button>
 				</div>
 			</TransitionGroup>

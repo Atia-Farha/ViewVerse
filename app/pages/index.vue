@@ -11,7 +11,7 @@ useHead({
 	title: 'Home | ViewVerse',
 	meta: shareHeadMeta({
 		title: 'ViewVerse - Movies and TV, simplified',
-		description: 'A movie and TV show streaming platform. Browse trending, popular, top rated, now playing, and airing today.',
+		description: 'A platform for browsing and watching movies and TV shows.',
 		path: '/',
 	}),
 });
@@ -76,7 +76,6 @@ async function loadHero() {
 			const details = isTv ? await tmdb.tvDetails(top.id) : await tmdb.movieDetails(top.id);
 			heroMovie.value = details || null;
 		} catch {
-			// Fall back to using the trending item directly without full details
 			const normalized = normalizeMedia(top);
 			if (normalized) {
 				heroMovie.value = {

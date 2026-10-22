@@ -1,6 +1,6 @@
 # ViewVerse
 
-**A clean, fast, no-account-needed platform for browsing and watching movies and TV shows. No login. No subscription. Just watch.**
+**A clean, no-account-needed platform for browsing and watching movies and TV shows. No login. No subscription. Just watch.**
 
 **Live Site: [viewverse.pages.dev](https://viewverse.pages.dev/)**
 
@@ -65,4 +65,4 @@ The watchlist is entirely local - nothing is sent to any server.
 
 - Movie and TV data provided by [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
 - Streaming provided by [CineSrc](https://cinesrc.st/), [VidFast](https://vidfast.pro/), and [ScreenScape](https://nxsha.screenscape.me/).
-- ViewVerse is an independent personal project for learning purposes and is not affiliated with TMDB, CineSrc, VidFast, ScreenScape, or any studio or content owner.
+- ViewVerse is an independent project created for learning purposes and is not affiliated with TMDB, CineSrc, VidFast, ScreenScape, or any studio or content owner.

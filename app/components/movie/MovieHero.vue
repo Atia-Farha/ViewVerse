@@ -125,6 +125,7 @@ function onPlay() {
 
 .hero__title {
 	margin: 0;
+	margin-top: clamp(1rem, 2.5vw, 1.75rem);
 	font-family: var(--font-display);
 	font-size: clamp(2.2rem, 6vw, 4.4rem);
 	font-weight: 500;

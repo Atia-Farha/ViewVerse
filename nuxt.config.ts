@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 				{ name: 'theme-color', content: '#0b0b0f' },
 				{
 					name: 'description',
-					content: 'A movie and TV show streaming platform.',
+					content: 'A platform for browsing and watching movies and TV shows.',
 				},
 				{ property: 'og:site_name', content: 'ViewVerse' },
 				{ property: 'og:image', content: '/og-image.png' },
